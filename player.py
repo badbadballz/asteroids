@@ -8,6 +8,7 @@ class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
+        self.rotate_speed = 0
         self.timer = 0 #shot cooldown timer
 
 # in the player class
@@ -31,11 +32,13 @@ class Player(CircleShape):
         #self.position += self.velocity
 
     def rotate(self, dt):
-        self.rotation += PLAYER_TURN_SPEED * dt
+        #self.rotation += PLAYER_TURN_SPEED * dt
+        self.rotate_speed += PLAYER_TURN_SPEED * dt
 
     def update(self, dt):
         self.timer -= dt
         self.position += self.velocity
+        self.rotation += self.rotate_speed
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
