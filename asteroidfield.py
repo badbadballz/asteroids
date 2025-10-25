@@ -3,7 +3,7 @@ import random
 from asteroid import Asteroid
 from constants import *
 
-
+#wtf?
 class AsteroidField(pygame.sprite.Sprite):
     edges = [
         [

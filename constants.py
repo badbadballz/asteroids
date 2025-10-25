@@ -16,4 +16,5 @@ PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_COOLDOWN = 0.3
 
 Collisions_on = True
+Player_collisions_on = True
 #Bullet_collisions_on = True

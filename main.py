@@ -8,11 +8,16 @@ from shot import Shot
 #from circleshape import CircleShape
 
 def main():
-    
+    score_counter = 0 # score for game
+
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
     pygame.init()
+    
+    pygame.font.init() # adding text?
+    score_font = pygame.font.SysFont('arial', 30)
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
@@ -44,13 +49,13 @@ def main():
         
         if Collisions_on:
             for ast in asteroids:
-                if player.check_collision(ast):
+                if player.check_collision(ast) and Player_collisions_on:
                     print("Game over!")
                     sys.exit()
                 for shot in shots:
                     if shot.check_collision(ast):
                         shot.kill()
-                        ast.split()
+                        score_counter += ast.split()
 
        # if Bullet_collisions_on:
         #    for ast in asteroids:
@@ -66,6 +71,9 @@ def main():
         #why the s loop works but drawable.draw(screen) doesn't?
         #updatable.draw(screen)
 
+        (score_x, _) = score_font.size(str(score_counter))
+        score = score_font.render(str(score_counter), False, "white")
+        screen.blit(score, (SCREEN_WIDTH - score_x ,0))
 
         pygame.display.flip()
         dt = clock.tick(60) / 1000 # how fast is this???
