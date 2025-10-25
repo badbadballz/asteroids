@@ -71,7 +71,7 @@ def main():
         #why the s loop works but drawable.draw(screen) doesn't?
         #updatable.draw(screen)
 
-        (score_x, _) = score_font.size(str(score_counter))
+        (score_x, _) = score_font.size(str(score_counter)) #is it efficent to run this all the time?
         score = score_font.render(str(score_counter), False, "white")
         screen.blit(score, (SCREEN_WIDTH - score_x ,0))
 

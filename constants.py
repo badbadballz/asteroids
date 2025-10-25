@@ -12,7 +12,7 @@ PLAYER_TURN_SPEED = 4
 PLAYER_SPEED = 5
 
 SHOT_RADIUS = 5
-PLAYER_SHOOT_SPEED = 500
+PLAYER_SHOOT_SPEED = 4.2 # no longer in the hundreds since no more *dt
 PLAYER_SHOOT_COOLDOWN = 0.3
 
 Collisions_on = True
