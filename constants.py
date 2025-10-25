@@ -9,12 +9,12 @@ ASTEROID_SPLIT_ACC = 1.2
 
 PLAYER_RADIUS = 20
 PLAYER_TURN_SPEED = 300
-PLAYER_SPEED = 200
+PLAYER_SPEED = 2
 
 SHOT_RADIUS = 5
 PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_COOLDOWN = 0.3
 
 Collisions_on = True
-Player_collisions_on = True
+Player_collisions_on = False
 #Bullet_collisions_on = True
