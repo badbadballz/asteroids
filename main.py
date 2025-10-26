@@ -60,16 +60,14 @@ def main():
        # if Bullet_collisions_on:
         #    for ast in asteroids:
 
-
-
         screen.fill(0)
         
         #player.draw(screen
 
         for sp in drawable:
-            if sp.out_of_bounds():
+            
                
-                sp.flip_around_screen()
+            sp.flip_around_screen()
                #print (f"True {pos}")
 
             sp.draw(screen)
@@ -82,6 +80,7 @@ def main():
         screen.blit(score, (SCREEN_WIDTH - score_x ,0))
 
         pygame.display.flip()
+
         dt = clock.tick(60) / 1000 # how fast is this???
     
     

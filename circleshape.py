@@ -27,7 +27,7 @@ class CircleShape(pygame.sprite.Sprite):
         distance_between = self.position.distance_to(circleshape.position)
         return (self.radius + circleshape.radius) > distance_between
     
-    def out_of_bounds(self):
+    def out_of_bounds(self): # not used
         lower_left = pygame.Vector2()
         upper_right = pygame.Vector2()
         
@@ -43,7 +43,7 @@ class CircleShape(pygame.sprite.Sprite):
             return False    
     
     def flip_around_screen(self):
-        # use in conjuction with out_of_bounds()
+    
         if self.position.x < 0 - self.radius:
             self.position.x = SCREEN_WIDTH + self.radius
             return
