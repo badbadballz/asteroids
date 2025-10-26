@@ -64,8 +64,14 @@ def main():
 
         screen.fill(0)
         
-        #player.draw(screen)
+        #player.draw(screen
+
         for sp in drawable:
+            if sp.out_of_bounds():
+               
+                sp.flip_around_screen()
+               #print (f"True {pos}")
+
             sp.draw(screen)
         #drawable.draw(screen)
         #why the s loop works but drawable.draw(screen) doesn't?

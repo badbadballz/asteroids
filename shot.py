@@ -7,9 +7,16 @@ class Shot(CircleShape):
      def __init__(self, x, y):
          super().__init__(x, y, SHOT_RADIUS)
           #super().velocity = PLAYER_SHOOT_SPEED
+         self.life = SHOT_LIFE
 
      def draw (self, screen):
          pygame.draw.circle(screen, "yellow", self.position, self.radius, 0)
 
      def update(self, _):
+         if self.life < 0:
+             self.kill()
+             return
+         self.life  -= 1
          self.position += self.velocity  #what is dt for?, no need for dt because velocity has already dt factored in...
+        
+        

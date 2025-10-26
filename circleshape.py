@@ -1,4 +1,5 @@
 import pygame
+from constants import * 
 
 # Base class for game objects
 class CircleShape(pygame.sprite.Sprite):
@@ -25,3 +26,36 @@ class CircleShape(pygame.sprite.Sprite):
     def check_collision(self, circleshape):
         distance_between = self.position.distance_to(circleshape.position)
         return (self.radius + circleshape.radius) > distance_between
+    
+    def out_of_bounds(self):
+        lower_left = pygame.Vector2()
+        upper_right = pygame.Vector2()
+        
+        lower_left.xy = -(self.radius), SCREEN_HEIGHT + self.radius
+        upper_right.xy = SCREEN_WIDTH + self.radius, -(self.radius)
+
+        pos = self.position
+
+        if (pos.x < lower_left.x or pos.x > upper_right.x 
+            or pos.y < upper_right.y or pos.y > lower_left.y):
+            return True
+        else:
+            return False    
+    
+    def flip_around_screen(self):
+        # use in conjuction with out_of_bounds()
+        if self.position.x < 0 - self.radius:
+            self.position.x = SCREEN_WIDTH + self.radius
+            return
+        if self.position.x > SCREEN_WIDTH + self.radius:
+            self.position.x = 0 - self.radius
+            return
+        if self.position.y < 0 - self.radius:
+            self.position.y = SCREEN_HEIGHT + self.radius
+            return
+        if self.position.y > SCREEN_HEIGHT + self.radius:
+            self.position.y = 0 - self.radius
+            return
+                
+
+       
