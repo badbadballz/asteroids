@@ -1,5 +1,6 @@
 import sys 
 import pygame
+import math
 from constants import *
 from player import Player
 from asteroid import Asteroid
@@ -8,6 +9,7 @@ from shot import Shot
 #from circleshape import CircleShape
 
 def main():
+    time_counter = 0
     score_counter = 0 # score for game
 
     print("Starting Asteroids!")
@@ -17,6 +19,7 @@ def main():
     
     pygame.font.init() # adding text?
     score_font = pygame.font.SysFont('arial', 30)
+    timer_font = pygame.font.SysFont('arial', 30)
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
@@ -40,6 +43,8 @@ def main():
     
     
     while True:
+        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -79,10 +84,17 @@ def main():
         score = score_font.render(str(score_counter), False, "white")
         screen.blit(score, (SCREEN_WIDTH - score_x ,0))
 
+        f_time_counter = math.floor(time_counter)
+        (timer_x, _) = score_font.size(str(f_time_counter)) 
+        timer = timer_font.render(str(f_time_counter), False, "white")
+        screen.blit(timer, ((SCREEN_WIDTH / 2) - (timer_x / 2) ,0))
+
         pygame.display.flip()
 
-        dt = clock.tick(60) / 1000 # how fast is this???
+        dt = clock.tick(60) / 1000 
+        time_counter += dt
     
+        #print(math.floor(timer))
     
 
 

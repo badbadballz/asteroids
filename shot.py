@@ -12,11 +12,11 @@ class Shot(CircleShape):
      def draw (self, screen):
          pygame.draw.circle(screen, "yellow", self.position, self.radius, 0)
 
-     def update(self, _):
+     def update(self, dt):
          if self.life < 0:
              self.kill()
              return
-         self.life  -= 1
-         self.position += self.velocity  #what is dt for?, no need for dt because velocity has already dt factored in...
+         self.life  -= dt
+         self.position += self.velocity 
         
         
