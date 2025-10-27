@@ -20,11 +20,29 @@ class Player(CircleShape):
         c = self.position - forward * self.radius + right
         return [a, b, c]
     
-    #thats why, I've defined my own draw method???
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.triangle(), 2)
+        #forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        #a = self.position + forward * self.radius / 3
+        #b = self.position - forward * self.radius / 2
+        #pygame.draw.circle(screen, "green", a, self.radius / 3, 1) #3.8
+        #pygame.draw.circle(screen, "green", b, self.radius / 2, 1)
+        
+    def check_collision(self, circleshape):
 
-    #why dt needed, what exactly is dt??
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        a = self.position + forward * self.radius / 3
+        b = self.position - forward * self.radius / 2
+        a_radius = self.radius / 3
+        b_radius = self.radius / 2
+
+        distance_between_a = a.distance_to(circleshape.position)
+        distance_between_b = b.distance_to(circleshape.position)
+        
+        return ((a_radius + circleshape.radius) > distance_between_a or
+                (b_radius + circleshape.radius) > distance_between_b)
+
+
     def move(self, dt):
 
         forward = pygame.Vector2(0, 1).rotate(self.rotation)

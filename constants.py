@@ -7,7 +7,7 @@ ASTEROID_SPAWN_RATE = 5  # seconds # 2
 ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
 ASTEROID_SPLIT_ACC = 1.2
 
-PLAYER_RADIUS = 20
+PLAYER_RADIUS = 20 #20
 PLAYER_TURN_SPEED = 3.8 #4
 PLAYER_SPEED = 4.5 #5
 
@@ -17,5 +17,5 @@ PLAYER_SHOOT_SPEED = 350 # no longer in the hundreds since no more *dt
 PLAYER_SHOOT_COOLDOWN = 0.3
 
 Collisions_on = True
-Player_collisions_on = False
+Player_collisions_on = True
 #Bullet_collisions_on = True
