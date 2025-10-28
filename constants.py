@@ -11,13 +11,14 @@ ASTEROID_ROTATE_SPEED_RANDOM = 5
 ASTEROID_COLLISION_RANDOM = 100 # 1 in N chance per tick
 
 PLAYER_RADIUS = 20 #20
-PLAYER_TURN_SPEED = 3.5 #4
-PLAYER_SPEED = 4.0 #5
+PLAYER_TURN_SPEED = 3.7 #4
+PLAYER_SPEED = 4 #5
 
 SHOT_RADIUS = 3
 SHOT_LIFE = 0.9
 PLAYER_SHOOT_SPEED = 350 # no longer in the hundreds since no more *dt
 PLAYER_SHOOT_COOLDOWN = 0.3
+PLAYER_LIFE = 100
 
 Collisions_on = True
 Player_collisions_on = False

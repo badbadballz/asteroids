@@ -2,6 +2,7 @@ import pygame
 import random
 from circleshape import CircleShape
 from constants import *
+from explosion import Explosion
 
 class Asteroid(CircleShape):
 
@@ -10,7 +11,7 @@ class Asteroid(CircleShape):
         self.spoke_angles = [0] #inital datum spoke
         self.rotate_speed = 0
         self.rotation = 0
-        self.life = self.radius * 1
+        self.life = self.radius * 1 #lol
 
         self.generate_asteroid()
 
@@ -27,7 +28,7 @@ class Asteroid(CircleShape):
                 self.spoke_angles.append(angle)
             else:
                 break
-        print(f"{self.spoke_angles}, {sum(self.spoke_angles)}, spokes = {len(self.spoke_angles)}")
+        #print(f"{self.spoke_angles}, {sum(self.spoke_angles)}, spokes = {len(self.spoke_angles)}")
 
 
     def draw (self, screen):
@@ -54,12 +55,16 @@ class Asteroid(CircleShape):
         self.position += self.velocity * dt
         self.rotation += self.rotate_speed * dt
 
+
+        # more expandable way of logging score/ damage done is need in the future!
     def split(self):
         score = 1
         self.life -= 10
         if self.life > 0:
             return 0
         self.kill()
+        e = Explosion(self.position.x, self.position.y, self.radius + 10)
+                           
         if self.radius <= ASTEROID_MIN_RADIUS:
             return score
         else:

@@ -10,6 +10,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.rotate_speed = 0
         self.shot_cooldown = 0 #shot cooldown timer
+        self.life = 100
 
 # in the player class
     def triangle(self):
@@ -29,6 +30,7 @@ class Player(CircleShape):
             pygame.draw.circle(screen, "red", a, self.radius / 3, 1) #3.8
             pygame.draw.circle(screen, "red", b, self.radius / 2, 1)
         
+        # if  this runs down to 0 life, then its destroyed?
     def check_collision(self, circleshape):
 
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
