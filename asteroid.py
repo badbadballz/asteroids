@@ -10,11 +10,9 @@ class Asteroid(CircleShape):
         self.spoke_angles = [0] #inital datum spoke
         self.rotate_speed = 0
         self.rotation = 0
+        self.life = self.radius * 1
 
         self.generate_asteroid()
-
-    #def __eq__(self, ast):
-    #    return self.id == ast.id
 
        
     def generate_asteroid(self):
@@ -58,6 +56,9 @@ class Asteroid(CircleShape):
 
     def split(self):
         score = 1
+        self.life -= 10
+        if self.life > 0:
+            return 0
         self.kill()
         if self.radius <= ASTEROID_MIN_RADIUS:
             return score
