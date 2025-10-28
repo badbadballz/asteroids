@@ -17,5 +17,6 @@ PLAYER_SHOOT_SPEED = 350 # no longer in the hundreds since no more *dt
 PLAYER_SHOOT_COOLDOWN = 0.3
 
 Collisions_on = True
-Player_collisions_on = True
+Player_collisions_on = False
+Draw_on = True
 #Bullet_collisions_on = True

@@ -22,11 +22,12 @@ class Player(CircleShape):
     
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.triangle(), 2)
-        #forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        #a = self.position + forward * self.radius / 3
-        #b = self.position - forward * self.radius / 2
-        #pygame.draw.circle(screen, "green", a, self.radius / 3, 1) #3.8
-        #pygame.draw.circle(screen, "green", b, self.radius / 2, 1)
+        if Draw_on:
+            forward = pygame.Vector2(0, 1).rotate(self.rotation)
+            a = self.position + forward * self.radius / 3
+            b = self.position - forward * self.radius / 2
+            pygame.draw.circle(screen, "red", a, self.radius / 3, 1) #3.8
+            pygame.draw.circle(screen, "red", b, self.radius / 2, 1)
         
     def check_collision(self, circleshape):
 
