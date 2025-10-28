@@ -10,7 +10,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.rotate_speed = 0
         self.shot_cooldown = 0 #shot cooldown timer
-        self.life = 100
+        self.life = PLAYER_LIFE
 
 # in the player class
     def triangle(self):

@@ -55,6 +55,7 @@ class Asteroid(CircleShape):
         self.position += self.velocity * dt
         self.rotation += self.rotate_speed * dt
 
+    #write a damage() method
 
         # more expandable way of logging score/ damage done is need in the future!
     def split(self):

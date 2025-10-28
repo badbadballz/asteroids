@@ -12,12 +12,12 @@ class Explosion (CircleShape):
     def __init__(self, x, y, radius):
         super().__init__(x, y, 1)
         self.final_radius = radius + extra_boom
-        self.wave_width = 5 + radius // 5
+        #self.wave_width = 5 + radius // 5
         #self.time = radius * 5
 
     def draw(self, screen):
         #print(propagation)
-        pygame.draw.circle(screen, colour , self.position, self.radius, self.wave_width)
+        pygame.draw.circle(screen, colour , self.position, self.radius, 0) #self.wave_width)
         
 
     def update(self, dt):

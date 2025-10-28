@@ -62,8 +62,7 @@ def main():
                     print(f"hit! @ {time_counter}")
                 for shot in shots:
                     if shot.check_collision(ast):
-                        e = Explosion(shot.position.x, shot.position.y, shot.radius)
-                        shot.kill()
+                        shot.explode()
                         score_counter += ast.split()
                 for other_ast in asteroids:
                     if ast is other_ast:
