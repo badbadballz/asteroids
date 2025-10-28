@@ -12,6 +12,10 @@ class Asteroid(CircleShape):
         self.rotation = 0
 
         self.generate_asteroid()
+
+    #def __eq__(self, ast):
+    #    return self.id == ast.id
+
        
     def generate_asteroid(self):
         min_angle = 30
@@ -25,7 +29,7 @@ class Asteroid(CircleShape):
                 self.spoke_angles.append(angle)
             else:
                 break
-        #print(f"{self.spoke_angles}, {sum(self.spoke_angles)}, spokes = {len(self.spoke_angles)}")
+        print(f"{self.spoke_angles}, {sum(self.spoke_angles)}, spokes = {len(self.spoke_angles)}")
 
 
     def draw (self, screen):

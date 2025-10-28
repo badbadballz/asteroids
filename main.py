@@ -1,6 +1,7 @@
 import sys 
 import pygame
 import math
+import random
 from constants import *
 from player import Player
 from asteroid import Asteroid
@@ -57,6 +58,14 @@ def main():
                     if shot.check_collision(ast):
                         shot.kill()
                         score_counter += ast.split()
+                for other_ast in asteroids:
+                    if ast is other_ast:
+                        continue
+                    else:
+                        if ast.check_collision(other_ast) and random.randint(1, ASTEROID_COLLISION_RANDOM) == 1:
+                            ast.split()
+                            other_ast.split()
+                    
 
         screen.fill(0)
         
