@@ -8,7 +8,7 @@ class Shot(CircleShape):
      def __init__(self, x, y):
          super().__init__(x, y, SHOT_RADIUS)
          self.life = SHOT_LIFE
-         shot_damage = SHOT_DAMAGE
+         self.dp = SHOT_DAMAGE
 
      def draw (self, screen):
          pygame.draw.circle(screen, "yellow", self.position, self.radius, 0)
@@ -21,7 +21,7 @@ class Shot(CircleShape):
          self.position += self.velocity 
         
      def explode(self):
-        e = Explosion(self.position.x, self.position.y, self.radius)
+        _ = Explosion(self.position.x, self.position.y, self.radius)
         self.kill()
         
         

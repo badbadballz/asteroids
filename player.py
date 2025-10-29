@@ -1,6 +1,7 @@
 import pygame
 from circleshape import CircleShape
 from shot import Shot
+from explosion import Explosion
 from constants import *
 
 class Player(CircleShape):
@@ -44,6 +45,15 @@ class Player(CircleShape):
         
         return ((a_radius + circleshape.radius) > distance_between_a or
                 (b_radius + circleshape.radius) > distance_between_b)
+
+    def damage(self, dp):
+        self.life -= dp
+        if self.life <= 0:
+             _ = Explosion(self.position.x, self.position.y, self.radius * 2) 
+             self.kill()
+             return 0
+        else:
+            return self.life
 
 
     def move(self, dt):

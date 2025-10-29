@@ -4,6 +4,7 @@ from circleshape import CircleShape
 from constants import *
 from explosion import Explosion
 
+
 class Asteroid(CircleShape):
 
     def __init__(self, x, y, radius):
@@ -11,7 +12,8 @@ class Asteroid(CircleShape):
         self.spoke_angles = [0] #inital datum spoke
         self.rotate_speed = 0
         self.rotation = 0
-        self.life = self.radius * 1 #lol
+        self.life = self.radius * 1
+        self.splited = False
 
         self.generate_asteroid()
 
@@ -56,26 +58,50 @@ class Asteroid(CircleShape):
         self.rotation += self.rotate_speed * dt
 
     #write a damage() method
+    def damage(self, dp):
+        self.life -= dp
+        if self.life <= 0:
+            _ = Explosion(self.position.x, self.position.y, self.radius) 
+            return self.split()
+        return 0
+
 
         # more expandable way of logging score/ damage done is need in the future!
     def split(self):
-        score = 1
-        self.life -= 10
-        if self.life > 0:
+        
+        if self.splited: # This is needed to stop splitting after .kill() is called
             return 0
-        self.kill()
-        e = Explosion(self.position.x, self.position.y, self.radius + 10)
-                           
+        self.splited = True
+        score = 1
+                          
         if self.radius <= ASTEROID_MIN_RADIUS:
+            self.kill() 
             return score
         else:
-            velocity1 = self.velocity.rotate(random.uniform(20, 50))
-            velocity2 = self.velocity.rotate(-1 * random.uniform(20, 50))
-            new_radius = self.radius - ASTEROID_MIN_RADIUS
-            ast1 = Asteroid(self.position.x, self.position.y, new_radius)
-            ast1.velocity = velocity1 * ASTEROID_SPLIT_ACC
-            ast1.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC 
-            ast2 = Asteroid(self.position.x, self.position.y, new_radius)
-            ast2.velocity = velocity2 * ASTEROID_SPLIT_ACC
-            ast2.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC
-            return score * (new_radius // 10)
+            #print(f"parent: {self.velocity}")
+            angle_1 = random.uniform(20, 50) #20, 50
+            #print(f"angle_1: {angle_1}")
+            angle_2 = -1 * random.uniform(20, 50)
+            #print(f"angle_2: {angle_2}")
+            velocity_1 = self.velocity.rotate(angle_1)
+            velocity_2 = self.velocity.rotate(angle_2)
+            direction_1 = velocity_1.normalize()
+            #print(f"direction_1: {direction_1}")
+            direction_2 = velocity_2.normalize()
+            #print(f"direction_2: {direction_2}")
+
+            smaller_radius = self.radius - ASTEROID_MIN_RADIUS
+            ast_1_pos = self.position + direction_1 * self.radius #why self.radius?
+            #print(f"ast_1_pos: {ast_1_pos}")
+            ast_2_pos = self.position + direction_2 * self.radius
+            #print(f"ast_2_pos: {ast_2_pos}")
+            ast_1 = Asteroid(ast_1_pos.x, ast_1_pos.y, smaller_radius)
+            ast_1.velocity = velocity_1 * ASTEROID_SPLIT_ACC
+            ast_1.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC 
+            
+            ast_2 = Asteroid(ast_2_pos.x, ast_2_pos.y, smaller_radius)
+            ast_2.velocity = velocity_2 * ASTEROID_SPLIT_ACC
+            ast_2.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC
+            
+            self.kill() 
+            return score * (smaller_radius // 10)

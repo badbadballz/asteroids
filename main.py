@@ -13,6 +13,7 @@ from explosion import Explosion
 def main():
     time_counter = 0
     score_counter = 0 # score for game
+    
 
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
@@ -22,6 +23,7 @@ def main():
     pygame.font.init() # adding text?
     score_font = pygame.font.SysFont('arial', 30)
     timer_font = pygame.font.SysFont('arial', 30)
+    life_font = pygame.font.SysFont('arial', 30)
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
@@ -41,11 +43,11 @@ def main():
     Explosion.containers = (updatable, drawable)
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-    asteroidfield = AsteroidField()
+    life_counter = player.life 
+    (_, life_y) = score_font.size(str(life_counter)) 
+    _ = AsteroidField()
     
-    #e = Explosion(250, 260, 50)
-    #e = 1
-    #c = 128
+
     while True:
         
         for event in pygame.event.get():
@@ -54,28 +56,31 @@ def main():
 
         updatable.update(dt)
         
-        if Collisions_on:
+        if Collisions_on: #and frames >= 20: 
             for ast in asteroids:
                 if player.check_collision(ast) and Player_collisions_on:
                     #print("Game over!")
                     #sys.exit()
-                    print(f"hit! @ {time_counter}")
+                    #print(f"hit! @ {time_counter}")
+                    if life_counter > 0:
+                        life_remaining = player.damage(COLLISION_DP * dt)
+                    if life_remaining <= 0:
+                        life_remaining = 0
+                    life_counter = math.ceil(life_remaining) 
                 for shot in shots:
                     if shot.check_collision(ast):
                         shot.explode()
-                        score_counter += ast.split()
+                        score_counter += ast.damage(shot.dp) #ast.split()
                 for other_ast in asteroids:
                     if ast is other_ast:
                         continue
                     else:
-                        if ast.check_collision(other_ast) and random.randint(1, ASTEROID_COLLISION_RANDOM) == 1:
-                            ast.split()
-                            other_ast.split()
-
-       # for e in explosions:
-       #     if e.check_end():
-       #        e.kill()   
-
+                        if ast.check_collision(other_ast): #and random.randint(1, 10) == 1: #why need random?
+                            ast.damage(COLLISION_DP * dt)
+                            other_ast.damage(COLLISION_DP * dt)
+                            #ast.split() # more chance for small asteroids to break
+                            #other_ast.split() 
+       
         screen.fill(0)
         
 
@@ -85,18 +90,6 @@ def main():
                #print (f"True {pos}")
 
             sp.draw(screen)
-        #drawable.draw(screen)
-        #why the s loop works but drawable.draw(screen) doesn't?
-        #e.update(dt)
-        #e.draw(screen)   
-        
-       # if e < 50:
-       #     c += 0.5
-       #     test = pygame.draw.circle(screen, (255, c, 0), (250,260), e  , 5)
-       #     e += dt * 20
-       # else:
-       #     e = 0
-       #     c = 128
 
         (score_x, _) = score_font.size(str(score_counter)) #is it efficent to run this all the time?
         score = score_font.render(str(score_counter), False, "white")
@@ -107,11 +100,15 @@ def main():
         timer = timer_font.render(str(f_time_counter), False, "white")
         screen.blit(timer, ((SCREEN_WIDTH / 2) - (timer_x / 2) ,0))
 
+        # what happens when player is dead?
+        life = life_font.render(str(life_counter), False, "white")
+        screen.blit(life, (0 , SCREEN_HEIGHT - life_y))
+
         pygame.display.flip()
 
         dt = clock.tick(60) / 1000 
         time_counter += dt
-    
+        #print(time_counter)
         #print(math.floor(timer))
     
 
