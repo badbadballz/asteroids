@@ -44,7 +44,7 @@ class CircleShape(pygame.sprite.Sprite):
     
     def flip_around_screen(self):
         buffer_exit = 7 # 10 seems to stop weird line artfacts
-        buffer_entry = 3 # 5
+        buffer_entry = 1 # 5
     
         if self.position.x < 0 - self.radius - buffer_exit:
             self.position.x = SCREEN_WIDTH + self.radius + buffer_entry

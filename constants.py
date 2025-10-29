@@ -15,7 +15,8 @@ PLAYER_TURN_SPEED = 4 #4
 PLAYER_SPEED = 5 #5
 PLAYER_SHOOT_SPEED = 350 
 PLAYER_SHOOT_COOLDOWN = 0.3
-PLAYER_LIFE = 20
+PLAYER_HEALTH = 10
+PLAYER_LIFE = 1
 
 SHOT_RADIUS = 3
 SHOT_LIFE = 0.9
@@ -23,7 +24,7 @@ SHOT_DAMAGE = 10
 
 COLLISION_DP = 20
 
-
+Infinite_lives = False
 Collisions_on = True
 Player_collisions_on = True
 Draw_on = False

@@ -11,15 +11,15 @@ class Player(CircleShape):
         self.rotation = 0
         self.rotate_speed = 0
         self.shot_cooldown = 0 #shot cooldown timer
-        self.life = PLAYER_LIFE
+        self.health = PLAYER_HEALTH
 
 # in the player class
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        a = self.position + forward * self.radius
-        b = self.position - forward * self.radius - right
-        c = self.position - forward * self.radius + right
+        a = self.position - forward * self.radius
+        b = self.position + forward * self.radius - right
+        c = self.position + forward * self.radius + right
         return [a, b, c]
     
     def draw(self, screen):
@@ -31,7 +31,6 @@ class Player(CircleShape):
             pygame.draw.circle(screen, "red", a, self.radius / 3, 1) #3.8
             pygame.draw.circle(screen, "red", b, self.radius / 2, 1)
         
-        # if  this runs down to 0 life, then its destroyed?
     def check_collision(self, circleshape):
 
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -47,16 +46,15 @@ class Player(CircleShape):
                 (b_radius + circleshape.radius) > distance_between_b)
 
     def damage(self, dp):
-        self.life -= dp
-        if self.life <= 0:
+        self.health -= dp
+        if self.health <= 0:
              self.explode()
              return 0
         else:
-            return self.life
+            return self.health
         
     def explode(self):
          extra_boom = 15
-
          _ = Explosion(self.position.x, self.position.y, self.radius + extra_boom) 
          self.kill()
 
@@ -87,11 +85,10 @@ class Player(CircleShape):
             self.rotate(dt)
         if keys[pygame.K_w]:
             #forward
-            self.move(dt)
+            self.move(-dt)
         if keys[pygame.K_s]:
             #backward
-            self.move(-dt)
-        
+            self.move(dt)
         if keys[pygame.K_SPACE]:
             #shoot
             self.shoot(dt)
@@ -100,14 +97,14 @@ class Player(CircleShape):
         if self.shot_cooldown <= 0:
             # create a new bullet (shot) object
             forward = pygame.Vector2(0, 1).rotate(self.rotation) 
-            a = self.position + forward * self.radius #top of the triangle
+            a = self.position - forward * self.radius #top of the triangle
             bullet = Shot(a.x, a.y)
             #print(f"{self.velocity} {self.velocity.rotate(self.rotation)} {forward} {forward * PLAYER_SHOOT_SPEED}")
-            bullet.velocity = self.velocity + (PLAYER_SHOOT_SPEED * forward * dt)
+            bullet.velocity = self.velocity + (PLAYER_SHOOT_SPEED * forward * -dt)
             
             self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
 
-# self.position + self vector2 coordinates to get new position
+
 
                       
     
