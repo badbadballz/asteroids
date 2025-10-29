@@ -9,27 +9,35 @@ class Asteroid(CircleShape):
 
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)
-        self.spoke_angles = [0] #inital datum spoke
         self.rotate_speed = 0
         self.rotation = 0
         self.life = self.radius * 1
         self.splited = False
 
-        self.generate_asteroid()
+        self.spoke_angles = self.generate_asteroid()
 
        
     def generate_asteroid(self):
+        s_angles = [0]
         min_angle = 30
         max_angle = 80
+        min_sides = 6
+        max_sides = 7
         sum_angles = 0
+        sides = 0
         
         while True:
             angle = random.randint(min_angle, max_angle)
             sum_angles += angle
             if sum_angles <= 360:
-                self.spoke_angles.append(angle)
+                s_angles.append(angle)
+                sides += 1
             else:
-                break
+                if (sides < min_sides 
+                    or sides > max_sides):
+                    return self.generate_asteroid()
+                else:
+                    return s_angles
         #print(f"{self.spoke_angles}, {sum(self.spoke_angles)}, spokes = {len(self.spoke_angles)}")
 
 
@@ -61,10 +69,12 @@ class Asteroid(CircleShape):
     def damage(self, dp):
         self.life -= dp
         if self.life <= 0:
-            _ = Explosion(self.position.x, self.position.y, self.radius) 
             return self.split()
         return 0
 
+    def explode(self):
+         _ = Explosion(self.position.x, self.position.y, self.radius) 
+         self.kill()
 
         # more expandable way of logging score/ damage done is need in the future!
     def split(self):
@@ -75,7 +85,7 @@ class Asteroid(CircleShape):
         score = 1
                           
         if self.radius <= ASTEROID_MIN_RADIUS:
-            self.kill() 
+            self.explode()
             return score
         else:
             #print(f"parent: {self.velocity}")
@@ -103,5 +113,5 @@ class Asteroid(CircleShape):
             ast_2.velocity = velocity_2 * ASTEROID_SPLIT_ACC
             ast_2.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC
             
-            self.kill() 
+            self.explode()
             return score * (smaller_radius // 10)

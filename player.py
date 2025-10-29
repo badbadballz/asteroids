@@ -49,11 +49,16 @@ class Player(CircleShape):
     def damage(self, dp):
         self.life -= dp
         if self.life <= 0:
-             _ = Explosion(self.position.x, self.position.y, self.radius * 2) 
-             self.kill()
+             self.explode()
              return 0
         else:
             return self.life
+        
+    def explode(self):
+         extra_boom = 15
+
+         _ = Explosion(self.position.x, self.position.y, self.radius + extra_boom) 
+         self.kill()
 
 
     def move(self, dt):

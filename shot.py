@@ -20,6 +20,9 @@ class Shot(CircleShape):
          self.life  -= dt
          self.position += self.velocity 
         
+     def damage(self, dp):
+         pass
+
      def explode(self):
         _ = Explosion(self.position.x, self.position.y, self.radius)
         self.kill()
