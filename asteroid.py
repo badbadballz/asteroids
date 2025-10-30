@@ -88,23 +88,18 @@ class Asteroid(CircleShape):
             self.explode()
             return score
         else:
-            #print(f"parent: {self.velocity}")
+    
             angle_1 = random.uniform(20, 50) #20, 50
-            #print(f"angle_1: {angle_1}")
             angle_2 = -1 * random.uniform(20, 50)
-            #print(f"angle_2: {angle_2}")
             velocity_1 = self.velocity.rotate(angle_1)
             velocity_2 = self.velocity.rotate(angle_2)
             direction_1 = velocity_1.normalize()
-            #print(f"direction_1: {direction_1}")
             direction_2 = velocity_2.normalize()
-            #print(f"direction_2: {direction_2}")
 
             smaller_radius = self.radius - ASTEROID_MIN_RADIUS
             ast_1_pos = self.position + direction_1 * self.radius #why self.radius?
-            #print(f"ast_1_pos: {ast_1_pos}")
             ast_2_pos = self.position + direction_2 * self.radius
-            #print(f"ast_2_pos: {ast_2_pos}")
+
             ast_1 = Asteroid(ast_1_pos.x, ast_1_pos.y, smaller_radius)
             ast_1.velocity = velocity_1 * ASTEROID_SPLIT_ACC
             ast_1.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC 
