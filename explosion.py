@@ -7,6 +7,7 @@ propagation = 200
 extra_boom = 10
 colour = (255, 125, 0)
 
+#make this more general
 class Explosion (CircleShape):
     
     def __init__(self, x, y, radius):
