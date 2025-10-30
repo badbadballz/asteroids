@@ -15,8 +15,7 @@ class Asteroid(CircleShape):
         self.splited = False
 
         self.spoke_angles = self.generate_asteroid()
-
-       
+    
     def generate_asteroid(self):
         s_angles = [0]
         min_angle = 30
