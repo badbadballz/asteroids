@@ -48,6 +48,8 @@ def main():
     
     dead_timer = 0
     dead = False
+    reset = False
+    
     while True:
         
         for event in pygame.event.get():
@@ -103,6 +105,8 @@ def main():
         if dead:
             if life_counter <= 0:
                 game_over = True
+                keys = pygame.key.get_pressed()
+                
                 f_time_counter = math.floor(time_counter)
                 text1 = "Game Over"
                 text2 = f"Score: {f_time_counter + score_counter}"
@@ -112,6 +116,11 @@ def main():
                 screen.blit(over_text1, ((SCREEN_WIDTH / 2 - over_x1 / 2, SCREEN_HEIGHT / 2 - over_y1 / 2)))
                 over_text2 = game_font.render(str(text2), False, "white")
                 screen.blit(over_text2, ((SCREEN_WIDTH / 2 - over_x2 / 2, SCREEN_HEIGHT / 2 + over_y2 / 2)))
+
+                if keys[pygame.K_r]:
+                    #print("reset")
+                    reset = True
+
 
             elif dead_timer < 3:
                 dead_timer += dt
@@ -131,6 +140,25 @@ def main():
         if not game_over:
             time_counter += dt 
 
+        if reset:
+            updatable.empty()
+            drawable.empty()
+            asteroids.empty()
+            shots.empty()
+
+            _ = AsteroidField()
+            player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+            
+            health_counter = player.health
+            life_counter = PLAYER_LIFE
+            reset = False
+            game_over = False
+            dead = False
+            dead_timer = 0
+            time_counter = 0
+            score_counter = 0
+            
+            
 
 
 if __name__ == "__main__":
