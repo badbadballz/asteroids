@@ -24,7 +24,7 @@ class Shot(CircleShape):
          pass
 
      def explode(self):
-        _ = Explosion(self.position.x, self.position.y, self.radius, "yellow")
+        _ = Explosion(self.position.x, self.position.y, self.radius + 5, "yellow")
         self.kill()
         
         

@@ -52,18 +52,22 @@ class Asteroid(CircleShape):
         self.rotation += self.rotate_speed * dt
 
     #write a damage() method
-    def damage(self, dp):
+    def damage(self, dp, type="bump"): 
         self.life -= dp
         if self.life <= 0:
-            return self.split()
+            return self.split(type)
         return 0
 
-    def explode(self):
-         _ = Explosion(self.position.x, self.position.y, self.radius) 
-         self.kill()
+    def explode(self, type):
+        if type == "bump": 
+            ex = Explosion(self.position.x, self.position.y, self.radius, "grey")
+            ex.width = 10
+        if type == "explode":
+            _ = Explosion(self.position.x, self.position.y, self.radius)
+        self.kill()
 
         # more expandable way of logging score/ damage done is need in the future!
-    def split(self):
+    def split(self, type):
         
         if self.splited: # This is needed to stop splitting after .kill() is called
             return 0
@@ -71,7 +75,7 @@ class Asteroid(CircleShape):
         score = 1
                           
         if self.radius <= ASTEROID_MIN_RADIUS:
-            self.explode()
+            self.explode(type)
             return score
         else:
     
@@ -94,6 +98,6 @@ class Asteroid(CircleShape):
             ast_2.velocity = velocity_2 * ASTEROID_SPLIT_ACC
             ast_2.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC
             
-            self.explode()
+            self.explode(type)
             return score * (smaller_radius // 10)
         

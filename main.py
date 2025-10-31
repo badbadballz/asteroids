@@ -54,7 +54,8 @@ class Game_state():
         respawn_boom.width = 10
         respawn_boom.propagation = 200 #150
         respawn_boom.collision_on = True
-        respawn_boom.dp = 99999
+        respawn_boom.dp = RESPAWN_BOOM
+        respawn_boom.is_respawn_boom = True
         return player
 
 def draw_score(screen, game_font, gs):
@@ -95,9 +96,9 @@ def draw_gameover(screen, game_font, gs):
 
 def main():
 
-    #print("Starting Asteroids!")
-    #print(f"Screen width: {SCREEN_WIDTH}")
-    #print(f"Screen height: {SCREEN_HEIGHT}")
+    print("Starting Asteroids!")
+    print(f"Screen width: {SCREEN_WIDTH}")
+    print(f"Screen height: {SCREEN_HEIGHT}")
     print("W, A, S, D to move, SPACE to shoot, TAB to bomb")
     print("Press R to Restart after Game Over")
     print("Press C to Continue after Game Over")
@@ -136,7 +137,7 @@ def main():
                         gs.health_counter = player.damage(COLLISION_DP * dt)
                         #print (f"health_counter: {health_counter}")
                        
-                        ast.damage(COLLISION_DP * dt)
+                        ast.damage(COLLISION_DP * dt, "explode")
                         if gs.health_counter <= 0: 
                             gs.dead = True
                             respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG 
@@ -144,10 +145,12 @@ def main():
                 for shot in gs.shots:
                     if shot.check_collision(ast):
                         shot.explode()
-                        gs.score_counter += ast.damage(shot.dp) # respawn score as well?
+                        gs.score_counter += ast.damage(shot.dp, "explode") # respawn score as well?
                 for explosion in gs.explosions:
                     if explosion.collision_on and explosion.check_collision(ast):
-                        gs.score_counter += ast.damage(explosion.dp * dt)
+                        sc = ast.damage(explosion.dp * dt, "explode")
+                        if not explosion.is_respawn_boom:
+                             gs.score_counter += sc
                 for other_ast in gs.asteroids:
                     if ast is other_ast:
                         continue

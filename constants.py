@@ -26,9 +26,10 @@ SHOT_LIFE = 0.9
 SHOT_DAMAGE = 10
 
 COLLISION_DP = 20
+RESPAWN_BOOM = 99999
 
 Infinite_lives = False
-Infinite_bombs = False
+Infinite_bombs = True
 Collisions_on = True
 Player_collisions_on = True
 Draw_on = False

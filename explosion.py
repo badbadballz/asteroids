@@ -4,7 +4,6 @@ from circleshape import CircleShape
 from constants import *
 
 
-extra_boom = 10
 default = (255, 125, 0)
 starting_radius = 1
 
@@ -13,12 +12,13 @@ class Explosion (CircleShape):
     
     def __init__(self, x, y, radius, colour=default):
         super().__init__(x, y, starting_radius)
-        self.final_radius = radius + extra_boom
+        self.final_radius = radius 
         self.colour = colour
         self.width = 0     
         self.propagation = 200 
         self.collision_on = False
         self.dp = 0 # damage it causes
+        self.is_respawn_boom = False
         #self.wave_width = 5 + radius // 5
         #self.time = radius * 5
 
