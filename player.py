@@ -6,9 +6,9 @@ from constants import *
 
 bomb_dp = 1000
 bomb_radius = 200
-bomb_colour = "dodgerblue"
+bomb_colour = "yellow"
 bomb_wave_width = 10
-bomb_prog = 500
+bomb_prog = 300
 
 
 class Player(CircleShape):
@@ -20,6 +20,7 @@ class Player(CircleShape):
         self.shot_cooldown = 0 #shot cooldown timer
         self.bomb_cooldown = 0
         self.health = PLAYER_HEALTH
+        self.bomb_count = PLAYER_BOMB_COUNT
 
 # in the player class
     def triangle(self):
@@ -63,7 +64,7 @@ class Player(CircleShape):
         
     def explode(self):
          extra_boom = 15
-         _ = Explosion(self.position.x, self.position.y, self.radius + extra_boom) 
+         _ = Explosion(self.position.x, self.position.y, self.radius + extra_boom, "yellow") 
          self.kill()
 
 
@@ -119,10 +120,19 @@ class Player(CircleShape):
             
             self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
 
-    def bomb(self):
+    def bomb(self): # add player velocity
         # needs a buffer to stop spam
-        if self.bomb_cooldown <= 0:
-            _ = Explosion(self.position.x, self.position.y, self.radius + bomb_radius, bomb_colour , bomb_wave_width, bomb_prog, True, bomb_dp) 
+        if self.bomb_cooldown <= 0 and self.bomb_count > 0:
+            forward = pygame.Vector2(0, 1).rotate(self.rotation) 
+            
+            bomb = Explosion(self.position.x, self.position.y, self.radius + bomb_radius, bomb_colour)
+            bomb.width = bomb_wave_width
+            bomb.propagation = bomb_prog
+            bomb.collision_on = True
+            bomb.dp = bomb_dp
+            bomb.velocity = self.velocity
+            if not Infinite_bombs:
+                self.bomb_count -= 1
             self.bomb_cooldown = PLAYER_BOMB_COOLDOWN
 
 

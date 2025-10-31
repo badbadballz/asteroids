@@ -6,18 +6,19 @@ from constants import *
 
 extra_boom = 10
 default = (255, 125, 0)
+starting_radius = 1
 
 #make this more general
 class Explosion (CircleShape):
     
-    def __init__(self, x, y, radius, colour=default, width=0, prog=200, collision_on=False, dp=0):
-        super().__init__(x, y, 1)
+    def __init__(self, x, y, radius, colour=default):
+        super().__init__(x, y, starting_radius)
         self.final_radius = radius + extra_boom
         self.colour = colour
-        self.width = width     
-        self.propagation = prog  
-        self.collision_on = collision_on
-        self.dp = dp # damage it causes
+        self.width = 0     
+        self.propagation = 200 
+        self.collision_on = False
+        self.dp = 0 # damage it causes
         #self.wave_width = 5 + radius // 5
         #self.time = radius * 5
 
@@ -31,6 +32,7 @@ class Explosion (CircleShape):
              self.radius += dt * self.propagation
         else:
             self.kill()
+        self.position += self.velocity 
         
     def check_end(self): # not used
         return  self.radius >= self.final_radius

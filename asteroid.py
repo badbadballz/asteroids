@@ -29,7 +29,6 @@ class Asteroid(CircleShape):
             angle = random.randint(min_angle, max_angle)
             sum_angles += angle
             if sum_angles <= 360 and sides <= max_sides:
-                #spoke = pygame.Vector2(0, 1).rotate(sum_angles)* self.radius
                 s_vectors.append(sum_angles)
                 sides += 1
             else:
@@ -38,34 +37,15 @@ class Asteroid(CircleShape):
                     return self.generate_asteroid()
                 else:
                     return [pygame.Vector2(0, 1).rotate(s_angles)* self.radius for s_angles in s_vectors]
-                #list(map(lambda s_angles: pygame.Vector2(0, 1).rotate(s_angles)* self.radius ,s_vectors))
-        #print(f"{self.spoke_angles}, {sum(self.spoke_angles)}, spokes = {len(self.spoke_angles)}")
-
+            
 
     def draw (self, screen):
         if Draw_on:
             pygame.draw.circle(screen, "red", self.position, self.radius, 1)
-    
         pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
+        pygame.draw.polygon(screen, "grey50", pointy_shape, 3)
 
-        #pointy_shape = list(map(lambda spoke : self.position + spoke.rotate(self.rotation), self.spoke_vectors))
         
-        #if not self.out_of_bounds():
-        pygame.draw.polygon(screen, "grey60", pointy_shape, 3)
-
-    def pointy_shape_old(self, screen): # not used
-        points = []
-        sum_of_angles = 0
-        
-        for i in range(len(self.spoke_angles)):
-            spoke = pygame.Vector2(0, 1).rotate(self.rotation  + self.spoke_angles[i] + sum_of_angles)
-            point = self.position + spoke * self.radius
-            if Draw_on:
-                pygame.draw.circle(screen, "yellow", point, 2, 0)
-            points.append(point)
-            sum_of_angles += self.spoke_angles[i]
-        
-        return points
         
     def update(self, dt):
         self.position += self.velocity * dt
