@@ -18,6 +18,7 @@ class Game_state():
         self.drawable = pygame.sprite.Group()
         self.asteroids = pygame.sprite.Group()
         self.shots = pygame.sprite.Group()
+        self.explosions = pygame.sprite.Group()
 
     def __reset_state(self):
         self.reset = False
@@ -45,6 +46,7 @@ class Game_state():
         self.health_counter = PLAYER_HEALTH
         #self.dead_timer = 0
         self.dead = False
+        _ = Explosion(player.position.x, player.position.y, player.radius + 200, "black" , 20, 500, True, 99999) 
         return player
 
 def draw_score(screen, game_font, gs):
@@ -83,7 +85,8 @@ def main():
     print("Starting Asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
-    print("Press r to restart after Game Over")
+    print("Press R to Restart after Game Over")
+    print("Press C to Continue after Game Over")
     
     pygame.init()
     pygame.font.init() 
@@ -98,7 +101,7 @@ def main():
     Asteroid.containers = (gs.asteroids, gs.updatable, gs.drawable)
     AsteroidField.containers = (gs.updatable)
     Shot.containers = (gs.shots, gs.updatable, gs.drawable)
-    Explosion.containers = (gs.updatable, gs.drawable)
+    Explosion.containers = (gs.explosions, gs.updatable, gs.drawable)
 
     gs.new_game()
     player = gs.respawn()
@@ -118,14 +121,19 @@ def main():
                         gs.health_counter = player.damage(COLLISION_DP * dt)
                         #print (f"health_counter: {health_counter}")
                         ast.damage(COLLISION_DP * dt)
-                    else:
-                        gs.dead = True
-                        respawn_time = gs.time_counter + 2    
-                            
+                        if gs.health_counter <= 0: 
+                            gs.dead = True
+                            respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG 
+                   # else:
+                        #gs.dead = True
+                        #respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG    
                 for shot in gs.shots:
                     if shot.check_collision(ast):
                         shot.explode()
                         gs.score_counter += ast.damage(shot.dp) 
+                for explosion in gs.explosions:
+                    if explosion.collision_on and explosion.check_collision(ast):
+                        ast.damage(explosion.dp * dt)
                 for other_ast in gs.asteroids:
                     if ast is other_ast:
                         continue
@@ -149,6 +157,10 @@ def main():
                 keys = pygame.key.get_pressed()
                 if keys[pygame.K_r]:  
                     gs.reset = True
+                if keys[pygame.K_c]:
+                    player = gs.respawn()
+                    gs.life_counter = PLAYER_LIFE
+                    gs.game_over = False
 
             #elif gs.time_counter < respawn_lag: #gs.dead_timer < 2: # can just use time_counter
                 #gs.dead_timer += dt

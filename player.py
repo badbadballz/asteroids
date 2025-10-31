@@ -4,6 +4,13 @@ from shot import Shot
 from explosion import Explosion
 from constants import *
 
+bomb_dp = 1000
+bomb_radius = 200
+bomb_colour = "dodgerblue"
+bomb_wave_width = 10
+bomb_prog = 500
+
+
 class Player(CircleShape):
 
     def __init__(self, x, y):
@@ -11,6 +18,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.rotate_speed = 0
         self.shot_cooldown = 0 #shot cooldown timer
+        self.bomb_cooldown = 0
         self.health = PLAYER_HEALTH
 
 # in the player class
@@ -69,7 +77,11 @@ class Player(CircleShape):
         self.rotate_speed += PLAYER_TURN_SPEED * dt
 
     def update(self, dt):
-        self.shot_cooldown -= dt
+        if self.shot_cooldown >= 0:
+            self.shot_cooldown -= dt 
+        if self.bomb_cooldown >= 0:
+            self.bomb_cooldown -= dt
+        
         self.position += self.velocity
         self.rotation += self.rotate_speed
         
@@ -92,6 +104,9 @@ class Player(CircleShape):
         if keys[pygame.K_SPACE]:
             #shoot
             self.shoot(dt)
+        if keys[pygame.K_TAB]:
+            #bomb
+            self.bomb()
         
     def shoot(self, dt):
         if self.shot_cooldown <= 0:
@@ -104,7 +119,13 @@ class Player(CircleShape):
             
             self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
 
+    def bomb(self):
+        # needs a buffer to stop spam
+        if self.bomb_cooldown <= 0:
+            _ = Explosion(self.position.x, self.position.y, self.radius + bomb_radius, bomb_colour , bomb_wave_width, bomb_prog, True, bomb_dp) 
+            self.bomb_cooldown = PLAYER_BOMB_COOLDOWN
+
 
 
                       
-    
+ 
