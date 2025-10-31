@@ -73,8 +73,8 @@ class Player(CircleShape):
         self.position += self.velocity
         self.rotation += self.rotate_speed
         
-        #print(f"{self.position} {self.check_bounds()}")
-        
+        #print(f"{self.position} {self.out_of_bounds()}")
+
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:

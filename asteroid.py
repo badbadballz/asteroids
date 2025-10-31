@@ -49,8 +49,9 @@ class Asteroid(CircleShape):
         pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
 
         #pointy_shape = list(map(lambda spoke : self.position + spoke.rotate(self.rotation), self.spoke_vectors))
-        if self.out_of_bounds:
-            pygame.draw.polygon(screen, "grey60", pointy_shape, 2)
+        
+        #if not self.out_of_bounds():
+        pygame.draw.polygon(screen, "grey60", pointy_shape, 3)
 
     def pointy_shape_old(self, screen): # not used
         points = []
@@ -115,3 +116,4 @@ class Asteroid(CircleShape):
             
             self.explode()
             return score * (smaller_radius // 10)
+        

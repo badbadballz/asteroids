@@ -28,23 +28,23 @@ class CircleShape(pygame.sprite.Sprite):
         return (self.radius + circleshape.radius) > distance_between
     
     def out_of_bounds(self): 
-        lower_left = pygame.Vector2()
-        upper_right = pygame.Vector2()
+        lower_left = ( -(self.radius), SCREEN_HEIGHT + self.radius) #pygame.Vector2()
+        upper_right = (SCREEN_WIDTH + self.radius, -(self.radius))#pygame.Vector2()
         
-        lower_left.xy = -(self.radius), SCREEN_HEIGHT + self.radius
-        upper_right.xy = SCREEN_WIDTH + self.radius, -(self.radius)
+        #lower_left.xy = -(self.radius), SCREEN_HEIGHT + self.radius
+        #upper_right.xy = SCREEN_WIDTH + self.radius, -(self.radius)
 
         pos = self.position
 
-        if (pos.x < lower_left.x or pos.x > upper_right.x 
-            or pos.y < upper_right.y or pos.y > lower_left.y):
+        if (pos.x < lower_left[0] or pos.x > upper_right[0]
+            or pos.y < upper_right[1] or pos.y > lower_left[1]):
             return True
         else:
             return False    
     
     def flip_around_screen(self):
-        buffer_exit = 3 # 10 seems to stop weird line artfacts
-        buffer_entry = 1 # 5
+        buffer_exit = 4 # 10 seems to stop weird line artfacts
+        buffer_entry = 2 # 5
     
         if self.position.x < 0 - self.radius - buffer_exit:
             self.position.x = SCREEN_WIDTH + self.radius + buffer_entry

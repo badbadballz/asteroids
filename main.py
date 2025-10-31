@@ -23,7 +23,7 @@ class Game_state():
         self.reset = False
         self.game_over = False
         self.dead = False
-        self.dead_timer = 0
+        #self.dead_timer = 0
         self.health_counter = PLAYER_HEALTH
         self.life_counter = PLAYER_LIFE
         self.time_counter = 0
@@ -43,7 +43,7 @@ class Game_state():
     def respawn(self):
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         self.health_counter = PLAYER_HEALTH
-        self.dead_timer = 0
+        #self.dead_timer = 0
         self.dead = False
         return player
 
@@ -119,7 +119,8 @@ def main():
                         #print (f"health_counter: {health_counter}")
                         ast.damage(COLLISION_DP * dt)
                     else:
-                        gs.dead = True    
+                        gs.dead = True
+                        respawn_time = gs.time_counter + 2    
                             
                 for shot in gs.shots:
                     if shot.check_collision(ast):
@@ -149,10 +150,10 @@ def main():
                 if keys[pygame.K_r]:  
                     gs.reset = True
 
-            elif gs.dead_timer < 2: # can just use time_counter
-                gs.dead_timer += dt
+            #elif gs.time_counter < respawn_lag: #gs.dead_timer < 2: # can just use time_counter
+                #gs.dead_timer += dt
                
-            elif gs.life_counter > 0:
+            elif gs.life_counter > 0 and gs.time_counter > respawn_time:
                 player = gs.respawn()
                 if not Infinite_lives:
                     gs.life_counter -= 1
