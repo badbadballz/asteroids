@@ -14,39 +14,45 @@ class Asteroid(CircleShape):
         self.life = self.radius * 1
         self.splited = False
 
-        self.spoke_angles = self.generate_asteroid()
+        self.spoke_vectors = self.generate_asteroid()
     
     def generate_asteroid(self):
-        s_angles = [0]
         min_angle = 30
         max_angle = 80
         min_sides = 6
         max_sides = 7
         sum_angles = 0
         sides = 0
+        s_vectors = [0] #[pygame.Vector2(0, 1) * self.radius] # datum spoke
         
         while True:
             angle = random.randint(min_angle, max_angle)
             sum_angles += angle
-            if sum_angles <= 360:
-                s_angles.append(angle)
+            if sum_angles <= 360 and sides <= max_sides:
+                #spoke = pygame.Vector2(0, 1).rotate(sum_angles)* self.radius
+                s_vectors.append(sum_angles)
                 sides += 1
             else:
                 if (sides < min_sides 
                     or sides > max_sides):
                     return self.generate_asteroid()
                 else:
-                    return s_angles
+                    return [pygame.Vector2(0, 1).rotate(s_angles)* self.radius for s_angles in s_vectors]
+                #list(map(lambda s_angles: pygame.Vector2(0, 1).rotate(s_angles)* self.radius ,s_vectors))
         #print(f"{self.spoke_angles}, {sum(self.spoke_angles)}, spokes = {len(self.spoke_angles)}")
 
 
     def draw (self, screen):
         if Draw_on:
             pygame.draw.circle(screen, "red", self.position, self.radius, 1)
-         
-        pygame.draw.polygon(screen, "brown", self.pointy_shape(screen), 2)
+    
+        pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
 
-    def pointy_shape(self, screen):
+        #pointy_shape = list(map(lambda spoke : self.position + spoke.rotate(self.rotation), self.spoke_vectors))
+        if self.out_of_bounds:
+            pygame.draw.polygon(screen, "grey60", pointy_shape, 2)
+
+    def pointy_shape_old(self, screen): # not used
         points = []
         sum_of_angles = 0
         

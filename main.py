@@ -149,7 +149,7 @@ def main():
                 if keys[pygame.K_r]:  
                     gs.reset = True
 
-            elif gs.dead_timer < 3:
+            elif gs.dead_timer < 2: # can just use time_counter
                 gs.dead_timer += dt
                
             elif gs.life_counter > 0:
