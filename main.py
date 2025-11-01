@@ -141,11 +141,10 @@ def main():
                         if gs.health_counter <= 0: 
                             gs.dead = True
                             respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG 
-
                 for shot in gs.shots:
                     if shot.check_collision(ast):
                         shot.explode()
-                        gs.score_counter += ast.damage(shot.dp, "explode") # respawn score as well?
+                        gs.score_counter += ast.damage(shot.dp, "explode") 
                 for explosion in gs.explosions:
                     if explosion.collision_on and explosion.check_collision(ast):
                         sc = ast.damage(explosion.dp * dt, "explode")
@@ -160,11 +159,10 @@ def main():
                             other_ast.damage(COLLISION_DP * dt)
                            
         screen.fill(0)
-    
         for sp in gs.drawable:
             sp.flip_around_screen()
             sp.draw(screen)
-
+               
         gs.bomb_counter = player.bomb_count
         draw_score(screen, game_font, gs)
 
@@ -185,15 +183,18 @@ def main():
                 if not Infinite_lives:
                     gs.life_counter -= 1
 
-        pygame.display.flip()   
-
-        dt = clock.tick(120) / 1000 
+         # maybe just moving the clock before flip() was the key to getting rid of the line artifacts? nope...
         if not gs.game_over:
             gs.time_counter += dt 
+        
+        pygame.display.flip()   
 
+        dt = clock.tick(120) / 1000
+        
         if gs.reset:
             gs.new_game()
             player = gs.respawn()
+       
             
             
 if __name__ == "__main__":

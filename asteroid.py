@@ -15,12 +15,13 @@ class Asteroid(CircleShape):
         self.splited = False
 
         self.spoke_vectors = self.generate_asteroid()
+        #self.pointy_shape =  [pygame.Vector2(0,1), pygame.Vector2(0,-1)]
     
     def generate_asteroid(self):
-        min_angle = 30
-        max_angle = 80
-        min_sides = 6
-        max_sides = 7
+        min_angle = 30 #30
+        max_angle = 80 #80
+        min_sides = 6 # 6
+        max_sides = 7 # 7
         sum_angles = 0
         sides = 0
         s_vectors = [0] #[pygame.Vector2(0, 1) * self.radius] # datum spoke
@@ -42,16 +43,24 @@ class Asteroid(CircleShape):
     def draw (self, screen):
         if Draw_on:
             pygame.draw.circle(screen, "red", self.position, self.radius, 1)
+        
+        #if not self.out_of_bounds():
         pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
-        pygame.draw.polygon(screen, "grey50", pointy_shape, 3)
-
+        #global pointy_shape
+        #self.pointy_shape = [self.position + spoke.rotate(0) for spoke  in self.spoke_vectors]
+        if not self.out_of_bounds():
+            pygame.draw.polygon(screen, "grey50", pointy_shape, 3)
+        else:
+            pygame.draw.polygon(screen, "grey50", pointy_shape, 1) #ok this could have solved the artifact issue finally...
+        #pygame.draw.circle(screen, "grey50", self.position, self.radius, 3)
         
         
     def update(self, dt):
         self.position += self.velocity * dt
         self.rotation += self.rotate_speed * dt
-
-    #write a damage() method
+        #self.pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
+        #self.spoke_vectors = list(map(lambda spoke: self.position + spoke.rotate(self.rotation), self.spoke_vectors))
+   
     def damage(self, dp, type="bump"): 
         self.life -= dp
         if self.life <= 0:
