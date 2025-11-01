@@ -31,7 +31,8 @@ PU_MAX_TIME = 30
 PU_MIN_TIME = 15
 PU_SPLIT_ACC = 1.3
 PU = ["H", "S", "B", "L"]
-PU_WEIGHTS = [4,3,2,1] # H, S, B, L
+PU_WEIGHTS = [40,30,20,10] # H, S, B, L
+BASE_AST_PU_CHANCE = 10
 
 Infinite_lives = False
 Infinite_bombs = False

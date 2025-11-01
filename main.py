@@ -117,7 +117,6 @@ def main():
         if not gs.dead:
             for pu in gs.powerups:
                 if player.check_collision(pu):
-                # print("hit pu!")
                     pu.reward(player, gs)
                     pu.explode() #make inverse explosion
 
@@ -128,9 +127,6 @@ def main():
         for sp in gs.drawable:
             sp.flip_around_screen()
             sp.draw(screen)
-
-        #gs.health_counter = player.health
-         #gs.bomb_counter = player.bomb_count
        
         draw_score(screen, game_font, gs)
 
