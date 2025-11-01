@@ -1,62 +1,15 @@
 import sys
 import pygame
 import math
-
 from constants import *
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
 from explosion import Explosion
+from powerup import Powerup
+from game_state import Game_state
 
-
-class Game_state():
-
-    def __init__(self):
-        self.__reset_state()
-
-        self.updatable = pygame.sprite.Group()
-        self.drawable = pygame.sprite.Group()
-        self.asteroids = pygame.sprite.Group()
-        self.shots = pygame.sprite.Group()
-        self.explosions = pygame.sprite.Group()
-        self.font_y = 0
-
-    def __reset_state(self):
-        self.reset = False
-        self.game_over = False
-        self.dead = False
-        #self.dead_timer = 0
-        self.health_counter = PLAYER_HEALTH
-        self.life_counter = PLAYER_LIFE
-        self.time_counter = 0
-        self.score_counter = 0
-        self.bomb_counter = PLAYER_BOMB_COUNT
-
-    def __empty_groups(self):
-        self.updatable.empty()
-        self.drawable.empty()
-        self.asteroids.empty()
-        self.shots.empty()
-
-    def new_game(self):
-        self.__empty_groups()
-        self.__reset_state()
-        _ = AsteroidField()
-
-    def respawn(self):
-        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-        self.health_counter = PLAYER_HEALTH
-        self.bomb_counter = PLAYER_BOMB_COUNT
-        self.dead = False
-        respawn_boom = Explosion(player.position.x, player.position.y, 200, "black")
-        respawn_boom.radius = player.radius + 10
-        respawn_boom.width = 10
-        respawn_boom.propagation = 200 #150
-        respawn_boom.collision_on = True
-        respawn_boom.dp = RESPAWN_BOOM
-        respawn_boom.is_respawn_boom = True
-        return player
 
 def draw_score(screen, game_font, gs):
         #only need to get font sizes once for health counter
@@ -87,8 +40,8 @@ def draw_gameover(screen, game_font, gs):
         f_time_counter = math.floor(gs.time_counter)
         text1 = "Game Over"
         text2 = f"Score: {f_time_counter + gs.score_counter}"
-        (over_x1, over_y1) = game_font.size(str(text1))
-        (over_x2, over_y2) = game_font.size(str(text2))
+        (over_x1, over_y1) = game_font.size(text1)
+        (over_x2, over_y2) = game_font.size(text2)
         over_text1 = game_font.render(str(text1), False, "white")
         screen.blit(over_text1, ((SCREEN_WIDTH / 2 - over_x1 / 2, SCREEN_HEIGHT / 2 - over_y1 / 2)))
         over_text2 = game_font.render(str(text2), False, "white")
@@ -118,37 +71,41 @@ def main():
     AsteroidField.containers = (gs.updatable)
     Shot.containers = (gs.shots, gs.updatable, gs.drawable)
     Explosion.containers = (gs.explosions, gs.updatable, gs.drawable)
+    Powerup.containers = (gs.powerups, gs.updatable, gs.drawable)
 
     gs.new_game()
-    player = gs.respawn()
+    player = gs.respawn() # consider new game and respawning @ same method
+
+    #test = Powerup(200, 200, "H") # letters not centered
+
 
     while True:
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-
+          
         gs.updatable.update(dt)
         
         if Collisions_on: 
             for ast in gs.asteroids:
                 if not gs.dead and Player_collisions_on and player.check_collision(ast):
-                    if  gs.health_counter > 0: 
-                        gs.health_counter = player.damage(COLLISION_DP * dt)
+                    #if  gs.health_counter > 0: 
+                    gs.dead = player.damage(COLLISION_DP * dt)
                         #print (f"health_counter: {health_counter}")
                        
-                        ast.damage(COLLISION_DP * dt, "explode")
-                        if gs.health_counter <= 0: 
-                            gs.dead = True
-                            respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG 
+                    ast.damage(COLLISION_DP * dt, "explode")
+                    #if player.health <= 0: #gs.health_counter <= 0:, possible issue of called killed player to get .health?
+                    if gs.dead == True:
+                        respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG 
                 for shot in gs.shots:
                     if shot.check_collision(ast):
                         shot.explode()
-                        gs.score_counter += ast.damage(shot.dp, "explode") 
+                        gs.score_counter += ast.damage(shot.dp, "explode", gs.reward_powerup) 
                 for explosion in gs.explosions:
-                    if explosion.collision_on and explosion.check_collision(ast):
+                    if explosion.collision_on and explosion.check_collision(ast): # explosions only kill asteroids
                         sc = ast.damage(explosion.dp * dt, "explode")
-                        if not explosion.is_respawn_boom:
+                        if not explosion.no_score:
                              gs.score_counter += sc
                 for other_ast in gs.asteroids:
                     if ast is other_ast:
@@ -157,13 +114,24 @@ def main():
                         if ast.check_collision(other_ast):
                             ast.damage(COLLISION_DP * dt)
                             other_ast.damage(COLLISION_DP * dt)
-                           
+        if not gs.dead:
+            for pu in gs.powerups:
+                if player.check_collision(pu):
+                # print("hit pu!")
+                    pu.reward(player, gs)
+                    pu.explode() #make inverse explosion
+
+
+        gs.update_player_info(player)             
+                     
         screen.fill(0)
         for sp in gs.drawable:
             sp.flip_around_screen()
             sp.draw(screen)
-               
-        gs.bomb_counter = player.bomb_count
+
+        #gs.health_counter = player.health
+         #gs.bomb_counter = player.bomb_count
+       
         draw_score(screen, game_font, gs)
 
         if gs.dead:

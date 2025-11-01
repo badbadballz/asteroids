@@ -3,6 +3,7 @@ import random
 from circleshape import CircleShape
 from constants import *
 from explosion import Explosion
+from powerup import Powerup
 
 
 class Asteroid(CircleShape):
@@ -15,7 +16,6 @@ class Asteroid(CircleShape):
         self.splited = False
 
         self.spoke_vectors = self.generate_asteroid()
-        #self.pointy_shape =  [pygame.Vector2(0,1), pygame.Vector2(0,-1)]
     
     def generate_asteroid(self):
         min_angle = 30 #30
@@ -24,7 +24,7 @@ class Asteroid(CircleShape):
         max_sides = 7 # 7
         sum_angles = 0
         sides = 0
-        s_vectors = [0] #[pygame.Vector2(0, 1) * self.radius] # datum spoke
+        s_vectors = [0] 
         
         while True:
             angle = random.randint(min_angle, max_angle)
@@ -44,27 +44,21 @@ class Asteroid(CircleShape):
         if Draw_on:
             pygame.draw.circle(screen, "red", self.position, self.radius, 1)
         
-        #if not self.out_of_bounds():
         pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
-        #global pointy_shape
-        #self.pointy_shape = [self.position + spoke.rotate(0) for spoke  in self.spoke_vectors]
+        
         if not self.out_of_bounds():
-            pygame.draw.polygon(screen, "grey50", pointy_shape, 3)
+            pygame.draw.polygon(screen, "grey50", pointy_shape, 2)
         else:
             pygame.draw.polygon(screen, "grey50", pointy_shape, 1) #ok this could have solved the artifact issue finally...
-        #pygame.draw.circle(screen, "grey50", self.position, self.radius, 3)
-        
-        
+      
     def update(self, dt):
         self.position += self.velocity * dt
         self.rotation += self.rotate_speed * dt
-        #self.pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
-        #self.spoke_vectors = list(map(lambda spoke: self.position + spoke.rotate(self.rotation), self.spoke_vectors))
-   
-    def damage(self, dp, type="bump"): 
+     
+    def damage(self, dp, type="bump", rewardfunction=None): #complicated
         self.life -= dp
         if self.life <= 0:
-            return self.split(type)
+            return self.split(type, rewardfunction)
         return 0
 
     def explode(self, type):
@@ -76,18 +70,22 @@ class Asteroid(CircleShape):
         self.kill()
 
         # more expandable way of logging score/ damage done is need in the future!
-    def split(self, type):
+    def split(self, type, rewardfunction=None):
         
         if self.splited: # This is needed to stop splitting after .kill() is called
             return 0
         self.splited = True
         score = 1
-                          
+        if type == "explode":
+            #self.reward_powerup()  
+            if not rewardfunction == None:
+                rewardfunction(self)                
         if self.radius <= ASTEROID_MIN_RADIUS:
             self.explode(type)
             return score
         else:
-    
+            # more general needed
+           
             angle_1 = random.uniform(20, 50) #20, 50
             angle_2 = -1 * random.uniform(20, 50)
             velocity_1 = self.velocity.rotate(angle_1)
@@ -109,4 +107,13 @@ class Asteroid(CircleShape):
             
             self.explode(type)
             return score * (smaller_radius // 10)
-        
+    
+    def reward_powerup(self):
+        chance = random.randint(1, 10)
+        print(f"chance {self.radius // 10} / 10, roll: {chance}")
+        if chance <= self.radius // 10:
+            
+            angle = random.uniform(-100, 100)
+            velocity = self.velocity.rotate(angle) * PU_SPLIT_ACC
+            pu = Powerup(self.position.x,self.position.y)
+            pu.velocity = velocity

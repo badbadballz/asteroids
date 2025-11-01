@@ -4,21 +4,21 @@ from circleshape import CircleShape
 from constants import *
 
 
-default = (255, 125, 0)
+default = "orange"
 starting_radius = 1
 
-#make this more general
+#make this more general / implosion
 class Explosion (CircleShape):
     
-    def __init__(self, x, y, radius, colour=default):
+    def __init__(self, x, y, radius, colour=default, collision_on=False, dp=0):
         super().__init__(x, y, starting_radius)
         self.final_radius = radius 
         self.colour = colour
         self.width = 0     
         self.propagation = 200 
-        self.collision_on = False
-        self.dp = 0 # damage it causes
-        self.is_respawn_boom = False
+        self.collision_on = collision_on
+        self.dp = dp # damage it causes
+        self.no_score = False
         #self.wave_width = 5 + radius // 5
         #self.time = radius * 5
 
