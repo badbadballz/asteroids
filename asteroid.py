@@ -108,7 +108,7 @@ class Asteroid(CircleShape):
             self.explode(type)
             return score * (smaller_radius // 10)
     
-    def reward_powerup(self):
+    def reward_powerup(self): # NOT USED
         chance = random.randint(1, 10)
         print(f"chance {self.radius // 10} / 10, roll: {chance}")
         if chance <= self.radius // 10:

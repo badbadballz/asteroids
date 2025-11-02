@@ -3,7 +3,7 @@ SCREEN_HEIGHT = 720
 
 ASTEROID_MIN_RADIUS = 20 # 20
 ASTEROID_KINDS = 4 # 3
-ASTEROID_SPAWN_RATE = 1 # seconds # 5
+ASTEROID_SPAWN_RATE = 5 # seconds # 5
 ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
 ASTEROID_SPLIT_ACC = 1.2
 ASTEROID_BASE_ROTATE_SPEED = 50 
@@ -31,12 +31,13 @@ PU_MAX_TIME = 30
 PU_MIN_TIME = 15
 PU_SPLIT_ACC = 1.3
 PU = ["H", "S", "B", "L"]
-PU_WEIGHTS = [40,30,20,10] # H, S, B, L
+PU_WEIGHTS = [40,35,15,10] # H, S, B, L
 BASE_AST_PU_CHANCE = 10
+MAX_PU_NUM = 5
 
 Infinite_lives = False
 Infinite_bombs = False
 Collisions_on = True
-Player_collisions_on = False
+Player_collisions_on = True
 Draw_on = False
 #Bullet_collisions_on = True

@@ -67,13 +67,13 @@ class Game_state():
     
     #working on this
     def reward_powerup(self, ast):
-        
-        chance = BASE_AST_PU_CHANCE + ast.radius - ASTEROID_MIN_RADIUS #smallest ast = base chance
-        roll = random.randint(1, 100)
-        print(f"chance {chance} / 100, roll: {roll}")
-        if roll <= chance:
-            [pu_type] = random.choices(PU, PU_WEIGHTS)
-            angle = random.uniform(-100, 100)
-            velocity = ast.velocity.rotate(angle) * 1.3
-            pu = Powerup(ast.position.x, ast.position.y, pu_type)
-            pu.velocity = velocity
+        if len(self.powerups) <= MAX_PU_NUM:
+            chance = BASE_AST_PU_CHANCE + ast.radius - ASTEROID_MIN_RADIUS #smallest ast = base chance
+            roll = random.randint(1, 100)
+            #print(f"chance {chance} / 100, roll: {roll}")
+            if roll <= chance:
+                [pu_type] = random.choices(PU, PU_WEIGHTS)
+                angle = random.uniform(-100, 100)
+                velocity = ast.velocity.rotate(angle) * PU_SPLIT_ACC
+                pu = Powerup(ast.position.x, ast.position.y, pu_type)
+                pu.velocity = velocity

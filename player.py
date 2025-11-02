@@ -10,6 +10,55 @@ bomb_colour = "orangered" #"mediumblue" #"yellow"
 bomb_wave_width = 10
 bomb_prog = 300
 
+max_level = 30
+min_cooldown = 0.05
+max_shot_life = 2
+d_cooldown = 0.01
+d_life = 0.05
+d_dp = 2
+d_radius = 1
+max_radius = 6
+d_speed = 20
+
+class Gun():
+    def __init__(self, player):
+        self.player = player
+        self.pu = 0
+
+        self.shot_timer = 0
+        self.shot_cooldown = PLAYER_SHOOT_COOLDOWN - (d_cooldown * self.pu) #for testing
+        self.shot_life = SHOT_LIFE  + (d_life * self.pu)
+        self.shot_dp = SHOT_DAMAGE + (d_dp * self.pu)
+        self.shot_radius = SHOT_RADIUS + min(self.pu // 10, 3)
+        self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * self.pu)
+    
+        #print(f"Gun lvl: {self.pu}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
+
+    def shoot(self, dt):
+        if self.shot_timer <= 0:
+            # create a new bullet (shot) object
+            forward = pygame.Vector2(0, 1).rotate(self.player.rotation) 
+            a = self.player.position - forward * self.player.radius #top of the triangle
+            bullet = Shot(a.x, a.y, self.shot_radius, self.shot_life, self.shot_dp)
+            #print(f"{self.velocity} {self.velocity.rotate(self.rotation)} {forward} {forward * PLAYER_SHOOT_SPEED}")
+            bullet.velocity = self.player.velocity + (self.shot_speed * forward * -dt)
+            
+            self.shot_timer = self.shot_cooldown
+            
+
+    def upgrade(self):
+        if self.pu < max_level:
+            self.pu += 1
+            if self.shot_cooldown > min_cooldown:
+                self.shot_cooldown -= d_cooldown # max limit!
+            if self.shot_life < max_shot_life:
+                self.shot_life += d_life 
+            self.shot_dp += d_dp 
+            if self.shot_radius < max_radius and self.pu % 10 == 0:
+                self.shot_radius += 1 # do this later
+            self.shot_speed += d_speed
+     
+        #print(f"Gun lvl: {self.pu}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
 class Player(CircleShape):
 
@@ -21,7 +70,9 @@ class Player(CircleShape):
         self.bomb_cooldown = 0
         self.health = PLAYER_HEALTH
         self.bomb_count = PLAYER_BOMB_COUNT
-        self.shotpu = 0
+        #self.shotpu = 0
+
+        self.gun = Gun(self)
 
 # in the player class
     def triangle(self):
@@ -79,8 +130,8 @@ class Player(CircleShape):
         self.rotate_speed += PLAYER_TURN_SPEED * dt
 
     def update(self, dt):
-        if self.shot_cooldown >= 0:
-            self.shot_cooldown -= dt 
+        if self.gun.shot_timer >= 0:
+            self.gun.shot_timer -= dt 
         if self.bomb_cooldown >= 0:
             self.bomb_cooldown -= dt
         
@@ -111,26 +162,27 @@ class Player(CircleShape):
             self.bomb()
         
     def shoot(self, dt):
-        if self.shot_cooldown <= 0:
+        
+        self.gun.shoot(dt)
+        
+       # if self.shot_cooldown <= 0:
             # create a new bullet (shot) object
-            forward = pygame.Vector2(0, 1).rotate(self.rotation) 
-            a = self.position - forward * self.radius #top of the triangle
-            bullet = Shot(a.x, a.y)
+       #     forward = pygame.Vector2(0, 1).rotate(self.rotation) 
+       #     a = self.position - forward * self.radius #top of the triangle
+       #     bullet = Shot(a.x, a.y)
             #print(f"{self.velocity} {self.velocity.rotate(self.rotation)} {forward} {forward * PLAYER_SHOOT_SPEED}")
-            bullet.velocity = self.velocity + (PLAYER_SHOOT_SPEED * forward * -dt)
+       #     bullet.velocity = self.velocity + (PLAYER_SHOOT_SPEED * forward * -dt)
             
-            self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
+       #     self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
 
-    def bomb(self): # add player velocity
-        # needs a buffer to stop spam
+    def bomb(self):
+       
         if self.bomb_cooldown <= 0 and self.bomb_count > 0:
-            forward = pygame.Vector2(0, 1).rotate(self.rotation) 
             
             bomb = Explosion(self.position.x, self.position.y, self.radius + bomb_radius, bomb_colour, True, bomb_dp)
             bomb.width = bomb_wave_width
             bomb.propagation = bomb_prog
-            #bomb.collision_on = True
-            #bomb.dp = bomb_dp
+            
             bomb.velocity = self.velocity
             if not Infinite_bombs:
                 self.bomb_count -= 1

@@ -104,7 +104,7 @@ def main():
                         gs.score_counter += ast.damage(shot.dp, "explode", gs.reward_powerup) 
                 for explosion in gs.explosions:
                     if explosion.collision_on and explosion.check_collision(ast): # explosions only kill asteroids
-                        sc = ast.damage(explosion.dp * dt, "explode")
+                        sc = ast.damage(explosion.dp * dt, "explode", gs.reward_powerup)
                         if not explosion.no_score:
                              gs.score_counter += sc
                 for other_ast in gs.asteroids:
@@ -116,6 +116,7 @@ def main():
                             other_ast.damage(COLLISION_DP * dt)
         if not gs.dead:
             for pu in gs.powerups:
+                #print(len(gs.powerups))
                 if player.check_collision(pu):
                     pu.reward(player, gs)
                     pu.explode() #make inverse explosion

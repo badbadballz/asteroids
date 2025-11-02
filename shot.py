@@ -5,10 +5,10 @@ from explosion import Explosion
 
 class Shot(CircleShape):
     
-     def __init__(self, x, y):
-         super().__init__(x, y, SHOT_RADIUS)
-         self.life = SHOT_LIFE
-         self.dp = SHOT_DAMAGE
+     def __init__(self, x, y, radius, life, dp):
+         super().__init__(x, y, radius)
+         self.life = life
+         self.dp = dp
 
      def draw (self, screen):
          pygame.draw.circle(screen, "yellow", self.position, self.radius, 0)
