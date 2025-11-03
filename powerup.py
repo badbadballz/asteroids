@@ -12,13 +12,13 @@ class Powerup(CircleShape):
                  "L": "white" } 
 
     def __init__(self, x, y, type="H"):
-        self.buffer = 10
+        self.buffer = 20  # easier to pick up
         self.type = type
         self.font_size = 25
         self.pu_font = pygame.font.SysFont('arial', self.font_size)
         self.pu = self.pu_font.render(self.type, False, self.pu_types[self.type])
         (self.font_x, self.font_y) = self.pu_font.size(self.type) 
-        super().__init__(x , y, 0.8 * self.font_size + self.buffer) # easier to pick up
+        super().__init__(x , y, 0.8 * self.font_size + self.buffer)
         self.life = random.randint(PU_MIN_TIME, PU_MAX_TIME)
 
     def update(self, dt):

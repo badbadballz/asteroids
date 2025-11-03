@@ -34,7 +34,7 @@ class Gun():
     
         #print(f"Gun lvl: {self.pu}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
-    def shoot(self, dt):
+    def fire(self, dt):
         if self.shot_timer <= 0:
             # create a new bullet (shot) object
             forward = pygame.Vector2(0, 1).rotate(self.player.rotation) 
@@ -163,7 +163,7 @@ class Player(CircleShape):
         
     def shoot(self, dt):
         
-        self.gun.shoot(dt)
+        self.gun.fire(dt)
         
        # if self.shot_cooldown <= 0:
             # create a new bullet (shot) object

@@ -46,10 +46,10 @@ class Asteroid(CircleShape):
         
         pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
         
-        if not self.out_of_bounds():
-            pygame.draw.polygon(screen, "grey50", pointy_shape, 2)
-        else:
-            pygame.draw.polygon(screen, "grey50", pointy_shape, 1) #ok this could have solved the artifact issue finally...
+        #if not self.out_of_bounds():
+        pygame.draw.polygon(screen, "grey50", pointy_shape, 2)
+        #else:
+        #    pygame.draw.polygon(screen, "grey50", pointy_shape, 1) #ok this could have solved the artifact issue finally...
       
     def update(self, dt):
         self.position += self.velocity * dt

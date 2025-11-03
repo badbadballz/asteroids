@@ -25,7 +25,7 @@ def draw_score(screen, game_font, gs):
 
         c_health_counter = math.ceil(gs.health_counter) 
         #(_, font_y) = game_font.size(str(gs.health_counter)) 
-        health = game_font.render(str(c_health_counter), False, "white")
+        health = game_font.render(str (f"H: {c_health_counter}"), False, "lime")
         screen.blit(health, (0 , SCREEN_HEIGHT - gs.font_y))
 
         bomb = game_font.render(str(gs.bomb_counter), False, "white")
