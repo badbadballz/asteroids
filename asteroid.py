@@ -43,22 +43,18 @@ class Asteroid(CircleShape):
     def draw (self, screen):
         if Draw_on:
             pygame.draw.circle(screen, "red", self.position, self.radius, 1)
-        
         pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
-        
-        #if not self.out_of_bounds():
         pygame.draw.polygon(screen, "grey50", pointy_shape, 2)
-        #else:
-        #    pygame.draw.polygon(screen, "grey50", pointy_shape, 1) #ok this could have solved the artifact issue finally...
+        
       
     def update(self, dt):
         self.position += self.velocity * dt
         self.rotation += self.rotate_speed * dt
      
-    def damage(self, dp, type="bump", rewardfunction=None): #complicated
+    def damage(self, dp, type="bump", rewardfunction=None, scorefunction=None): #complicated
         self.life -= dp
         if self.life <= 0:
-            return self.split(type, rewardfunction)
+            return self.split(type, rewardfunction, scorefunction)
         return 0
 
     def explode(self, type):
@@ -70,19 +66,21 @@ class Asteroid(CircleShape):
         self.kill()
 
         # more expandable way of logging score/ damage done is need in the future!
-    def split(self, type, rewardfunction=None):
+    def split(self, type, rewardfunction, scorefunction):
         
         if self.splited: # This is needed to stop splitting after .kill() is called
-            return 0
+            return 
         self.splited = True
-        score = 1
-        if type == "explode":
-            #self.reward_powerup()  
+        #score = 1
+        if type == "explode": 
             if not rewardfunction == None:
-                rewardfunction(self)                
+                rewardfunction(self)  
+            if not scorefunction == None:
+                scorefunction(self)              
+      
         if self.radius <= ASTEROID_MIN_RADIUS:
             self.explode(type)
-            return score
+        #    return score
         else:
             # more general needed
            
@@ -106,14 +104,5 @@ class Asteroid(CircleShape):
             ast_2.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC
             
             self.explode(type)
-            return score * (smaller_radius // 10)
+         #   return score * (smaller_radius // 10)
     
-    def reward_powerup(self): # NOT USED
-        chance = random.randint(1, 10)
-        print(f"chance {self.radius // 10} / 10, roll: {chance}")
-        if chance <= self.radius // 10:
-            
-            angle = random.uniform(-100, 100)
-            velocity = self.velocity.rotate(angle) * PU_SPLIT_ACC
-            pu = Powerup(self.position.x,self.position.y)
-            pu.velocity = velocity

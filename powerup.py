@@ -38,23 +38,28 @@ class Powerup(CircleShape):
         self.kill()
 
     def reward(self, player, gs):
-        
+        pu_score = 10
+
         match self.type:
             case "H":
                 #print("H")
                 player.health += 5
+                gs.score_counter += pu_score #should call reward_score
 
             case "S":
                 #print("S")
                 player.gun.upgrade()
+                gs.score_counter += pu_score
 
             case "B":
                 #print("B")
                 player.bomb_count += 1
+                gs.score_counter += pu_score
 
             case "L":
                 #print("L")
                 gs.life_counter += 1
-
+                gs.score_counter += pu_score
+                 
             case _:
                 return

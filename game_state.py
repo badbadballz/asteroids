@@ -66,7 +66,7 @@ class Game_state():
         return player
     
     #working on this
-    def reward_powerup(self, ast):
+    def spawn_powerup(self, ast):
         if len(self.powerups) <= MAX_PU_NUM:
             chance = BASE_AST_PU_CHANCE + ast.radius - ASTEROID_MIN_RADIUS #smallest ast = base chance
             roll = random.randint(1, 100)
@@ -77,3 +77,16 @@ class Game_state():
                 velocity = ast.velocity.rotate(angle) * PU_SPLIT_ACC
                 pu = Powerup(ast.position.x, ast.position.y, pu_type)
                 pu.velocity = velocity
+
+
+    def reward_score(self, obj, type=None):
+        if type == None:
+            base_score = 1
+        #function to calculate the score from the thing
+            if obj.radius <= ASTEROID_MIN_RADIUS:
+                self.score_counter += base_score
+            else:
+                self.score_counter += obj.radius // 10 
+        
+        
+    

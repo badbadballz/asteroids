@@ -28,10 +28,10 @@ def draw_score(screen, game_font, gs):
         health = game_font.render(str (f"H: {c_health_counter}"), False, "lime")
         screen.blit(health, (0 , SCREEN_HEIGHT - gs.font_y))
 
-        bomb = game_font.render(str(gs.bomb_counter), False, "white")
+        bomb = game_font.render(str(f"B: {gs.bomb_counter}"), False, "orangered")
         screen.blit(bomb, (0, SCREEN_HEIGHT - gs.font_y * 2))
 
-        life = game_font.render(str(gs.life_counter), False, "white")
+        life = game_font.render(str(f"L: {gs.life_counter}"), False, "white")
         screen.blit(life, (0, 0))
 
 
@@ -101,12 +101,15 @@ def main():
                 for shot in gs.shots:
                     if shot.check_collision(ast):
                         shot.explode()
-                        gs.score_counter += ast.damage(shot.dp, "explode", gs.reward_powerup) 
+                        #gs.score_counter += 
+                        ast.damage(shot.dp, "explode", gs.spawn_powerup, gs.reward_score) 
                 for explosion in gs.explosions:
                     if explosion.collision_on and explosion.check_collision(ast): # explosions only kill asteroids
-                        sc = ast.damage(explosion.dp * dt, "explode", gs.reward_powerup)
                         if not explosion.no_score:
-                             gs.score_counter += sc
+                            ast.damage(explosion.dp * dt, "explode", gs.spawn_powerup, gs.reward_score)
+                        else:
+                            ast.damage(explosion.dp * dt, "explode", gs.spawn_powerup)
+                             #gs.score_counter += 0
                 for other_ast in gs.asteroids:
                     if ast is other_ast:
                         continue
