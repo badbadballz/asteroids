@@ -48,6 +48,8 @@ class Powerup(CircleShape):
 
             case "S":
                 #print("S")
+                #player.gun.upgrade()
+                player.level += 1
                 player.gun.upgrade()
                 gs.score_counter += pu_score
 

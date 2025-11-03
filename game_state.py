@@ -32,6 +32,7 @@ class Game_state():
         self.time_counter = 0
         self.score_counter = 0
         self.bomb_counter = PLAYER_BOMB_COUNT
+        self.level_counter = 0
 
     def __empty_groups(self):
         self.updatable.empty()
@@ -42,6 +43,7 @@ class Game_state():
     def update_player_info(self, player):
         self.health_counter = player.health
         self.bomb_counter = player.bomb_count
+        self.level_counter = player.level
         
 
     def new_game(self):

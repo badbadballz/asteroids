@@ -31,6 +31,9 @@ def draw_score(screen, game_font, gs):
         bomb = game_font.render(str(f"B: {gs.bomb_counter}"), False, "orangered")
         screen.blit(bomb, (0, SCREEN_HEIGHT - gs.font_y * 2))
 
+        level = game_font.render(str(f"S: {gs.level_counter}"), False, "yellow")
+        screen.blit(level, (0, SCREEN_HEIGHT - gs.font_y * 3))
+
         life = game_font.render(str(f"L: {gs.life_counter}"), False, "white")
         screen.blit(life, (0, 0))
 
@@ -75,9 +78,6 @@ def main():
 
     gs.new_game()
     player = gs.respawn() # consider new game and respawning @ same method
-
-    #test = Powerup(200, 200, "H") # letters not centered
-
 
     while True:
         
@@ -125,7 +125,7 @@ def main():
                     pu.explode() #make inverse explosion
 
 
-        gs.update_player_info(player)             
+        gs.update_player_info(player)   #implement player level , not gun level
                      
         screen.fill(0)
         for sp in gs.drawable:
@@ -151,7 +151,6 @@ def main():
                 if not Infinite_lives:
                     gs.life_counter -= 1
 
-         # maybe just moving the clock before flip() was the key to getting rid of the line artifacts? nope...
         if not gs.game_over:
             gs.time_counter += dt 
         

@@ -23,16 +23,16 @@ d_speed = 20
 class Gun():
     def __init__(self, player):
         self.player = player
-        self.pu = 0
+        #self.pu = 0
 
         self.shot_timer = 0
-        self.shot_cooldown = PLAYER_SHOOT_COOLDOWN - (d_cooldown * self.pu) #for testing
-        self.shot_life = SHOT_LIFE  + (d_life * self.pu)
-        self.shot_dp = SHOT_DAMAGE + (d_dp * self.pu)
-        self.shot_radius = SHOT_RADIUS + min(self.pu // 10, 3)
-        self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * self.pu)
+        self.shot_cooldown = PLAYER_SHOOT_COOLDOWN - (d_cooldown * self.player.level) #for testing
+        self.shot_life = SHOT_LIFE  + (d_life * self.player.level)
+        self.shot_dp = SHOT_DAMAGE + (d_dp * self.player.level)
+        self.shot_radius = SHOT_RADIUS + min(self.player.level // 10, 3)
+        self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * self.player.level)
     
-        #print(f"Gun lvl: {self.pu}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
+        print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
     def fire(self, dt):
         if self.shot_timer <= 0:
@@ -47,18 +47,18 @@ class Gun():
             
 
     def upgrade(self):
-        if self.pu < max_level:
-            self.pu += 1
-            if self.shot_cooldown > min_cooldown:
-                self.shot_cooldown -= d_cooldown # max limit!
-            if self.shot_life < max_shot_life:
-                self.shot_life += d_life 
-            self.shot_dp += d_dp 
-            if self.shot_radius < max_radius and self.pu % 10 == 0:
-                self.shot_radius += 1 # do this later
-            self.shot_speed += d_speed
+        #if self.player.level < max_level:
+            #self.player.level += 1
+        if self.shot_cooldown > min_cooldown:
+             self.shot_cooldown -= d_cooldown # max limit!
+        if self.shot_life < max_shot_life:
+             self.shot_life += d_life 
+        self.shot_dp += d_dp 
+        if self.shot_radius < max_radius and self.player.level % 10 == 0:
+            self.shot_radius += 1 # do this later
+        self.shot_speed += d_speed
      
-        #print(f"Gun lvl: {self.pu}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
+        print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
 class Player(CircleShape):
 
@@ -71,6 +71,7 @@ class Player(CircleShape):
         self.health = PLAYER_HEALTH
         self.bomb_count = PLAYER_BOMB_COUNT
         #self.shotpu = 0
+        self.level = 0
 
         self.gun = Gun(self)
 
