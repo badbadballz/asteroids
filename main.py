@@ -76,8 +76,8 @@ def main():
     Explosion.containers = (gs.explosions, gs.updatable, gs.drawable)
     Powerup.containers = (gs.powerups, gs.updatable, gs.drawable)
 
-    gs.new_game()
-    player = gs.respawn() # consider new game and respawning @ same method
+    player = gs.new_game()
+    #player = gs.respawn() # consider new game and respawning @ same method
 
     while True:
         
@@ -159,8 +159,8 @@ def main():
         dt = clock.tick(120) / 1000
         
         if gs.reset:
-            gs.new_game()
-            player = gs.respawn()
+            player = gs.new_game()
+            #player = gs.respawn()
        
             
             

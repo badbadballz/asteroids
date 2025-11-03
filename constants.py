@@ -33,11 +33,11 @@ PU_SPLIT_ACC = 1.3
 PU = ["H", "S", "B", "L"]
 PU_WEIGHTS = [40,35,15,10] # H, S, B, L
 BASE_AST_PU_CHANCE = 10
-MAX_PU_NUM = 5
+MAX_PU_NUM = 4 
 
 Infinite_lives = False
 Infinite_bombs = False
 Collisions_on = True
-Player_collisions_on = False
+Player_collisions_on = True
 Draw_on = False
 #Bullet_collisions_on = True

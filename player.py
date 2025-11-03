@@ -62,7 +62,7 @@ class Gun():
 
 class Player(CircleShape):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, level=0):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.rotate_speed = 0
@@ -71,9 +71,10 @@ class Player(CircleShape):
         self.health = PLAYER_HEALTH
         self.bomb_count = PLAYER_BOMB_COUNT
         #self.shotpu = 0
-        self.level = 0
-
+        self.level = level
+        print(f"new player with level:{self.level}")
         self.gun = Gun(self)
+       
 
 # in the player class
     def triangle(self):
@@ -188,6 +189,10 @@ class Player(CircleShape):
             if not Infinite_bombs:
                 self.bomb_count -= 1
             self.bomb_cooldown = PLAYER_BOMB_COOLDOWN
+
+    def level_up(self):
+        self.level += 1
+        self.gun.upgrade()
 
 
 
