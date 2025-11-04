@@ -3,7 +3,7 @@ SCREEN_HEIGHT = 720
 
 ASTEROID_MIN_RADIUS = 20 # 20
 ASTEROID_KINDS = 4 # 3
-ASTEROID_SPAWN_RATE = 1 # seconds # 5
+ASTEROID_SPAWN_RATE = 6 # seconds # 5
 ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
 ASTEROID_SPLIT_ACC = 1.2
 ASTEROID_BASE_ROTATE_SPEED = 50 
@@ -38,6 +38,6 @@ MAX_PU_NUM = 4
 Infinite_lives = False
 Infinite_bombs = False
 Collisions_on = True
-Player_collisions_on = True
+Player_collisions_on = False
 Draw_on = False
 #Bullet_collisions_on = True

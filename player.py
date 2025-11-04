@@ -1,18 +1,23 @@
 import pygame
+import math
 from circleshape import CircleShape
 from shot import Shot
 from explosion import Explosion
 from constants import *
 
-bomb_dp = 1000
-bomb_radius = 200
-bomb_colour = "orangered" #"mediumblue" #"yellow"
-bomb_wave_width = 10
-bomb_prog = 300
+#lvl 10, increase bomb, lvl 20, explosive shot,  lvl max/30, blue mediumblue, dodgerblue
 
+bomb_dp = 100 #1000
+bomb_radius = 100 #200
+bomb_colour = "orangered" #"mediumblue" #"yellow"
+bomb_wave_width = 10 #10
+bomb_prog = 300 #300
+
+max_health = 100
 max_level = 30
+max_bomb = 10
 min_cooldown = 0.05
-max_shot_life = 2
+#max_shot_life = 2
 d_cooldown = 0.01
 d_life = 0.05
 d_dp = 2
@@ -20,19 +25,21 @@ d_radius = 1
 max_radius = 6
 d_speed = 20
 
-class Gun():
+# Player lvl: 0, cooldown: 0.3, life: 0.9, dp: 10, rad: 3 speed: 351
+# Player lvl: 30, cooldown: 0.05, life: 1.65, dp: 70, rad: 6 speed: 651
+
+class Gun(): #odd speed, even life
     def __init__(self, player):
         self.player = player
-        #self.pu = 0
-
+        l = self.player.level / 2
         self.shot_timer = 0
-        self.shot_cooldown = PLAYER_SHOOT_COOLDOWN - (d_cooldown * self.player.level) #for testing
-        self.shot_life = SHOT_LIFE  + (d_life * self.player.level)
+        self.shot_cooldown = max(PLAYER_SHOOT_COOLDOWN - (d_cooldown * self.player.level), min_cooldown) #for testing
+        self.shot_life = SHOT_LIFE  + (d_life * math.floor(l))#self.player.level)
         self.shot_dp = SHOT_DAMAGE + (d_dp * self.player.level)
         self.shot_radius = SHOT_RADIUS + min(self.player.level // 10, 3)
-        self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * self.player.level)
+        self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * math.ceil(l) + 1)#self.player.level)
     
-        print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
+        #print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
     def fire(self, dt):
         if self.shot_timer <= 0:
@@ -47,18 +54,20 @@ class Gun():
             
 
     def upgrade(self):
-        #if self.player.level < max_level:
-            #self.player.level += 1
-        if self.shot_cooldown > min_cooldown:
-             self.shot_cooldown -= d_cooldown # max limit!
-        if self.shot_life < max_shot_life:
-             self.shot_life += d_life 
+        
+        if self.shot_cooldown > min_cooldown: # limit!
+             self.shot_cooldown -= d_cooldown 
+        if self.player.level % 2 == 0:
+             self.shot_life += d_life
+        elif self.player.level % 2 == 1:
+             self.shot_speed += d_speed 
         self.shot_dp += d_dp 
         if self.shot_radius < max_radius and self.player.level % 10 == 0:
-            self.shot_radius += 1 # do this later
-        self.shot_speed += d_speed
+            self.shot_radius += 1 
+            
+                  
      
-        print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
+        #print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
 class Player(CircleShape):
 
@@ -70,9 +79,8 @@ class Player(CircleShape):
         self.bomb_cooldown = 0
         self.health = PLAYER_HEALTH
         self.bomb_count = PLAYER_BOMB_COUNT
-        #self.shotpu = 0
         self.level = level
-        print(f"new player with level:{self.level}")
+        #print(f"new player with level:{self.level}")
         self.gun = Gun(self)
        
 
@@ -86,7 +94,8 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        pygame.draw.polygon(screen, "white", self.triangle(), 2)
+        line = min(5, 2 + int((self.health - PLAYER_HEALTH) // 10))
+        pygame.draw.polygon(screen, "white", self.triangle(), line)
         if Draw_on:
             forward = pygame.Vector2(0, 1).rotate(self.rotation)
             a = self.position + forward * self.radius / 3
@@ -117,7 +126,7 @@ class Player(CircleShape):
             return False
         
     def explode(self):
-         extra_boom = 15
+         extra_boom = 20
          _ = Explosion(self.position.x, self.position.y, self.radius + extra_boom, "yellow", True, bomb_dp) 
          self.kill()
 
@@ -163,25 +172,16 @@ class Player(CircleShape):
             #bomb
             self.bomb()
         
-    def shoot(self, dt):
-        
+    def shoot(self, dt):      
         self.gun.fire(dt)
         
-       # if self.shot_cooldown <= 0:
-            # create a new bullet (shot) object
-       #     forward = pygame.Vector2(0, 1).rotate(self.rotation) 
-       #     a = self.position - forward * self.radius #top of the triangle
-       #     bullet = Shot(a.x, a.y)
-            #print(f"{self.velocity} {self.velocity.rotate(self.rotation)} {forward} {forward * PLAYER_SHOOT_SPEED}")
-       #     bullet.velocity = self.velocity + (PLAYER_SHOOT_SPEED * forward * -dt)
-            
-       #     self.shot_cooldown = PLAYER_SHOOT_COOLDOWN
-
     def bomb(self):
-       
+        d_radius = 10
+        d_dp = 10
+
         if self.bomb_cooldown <= 0 and self.bomb_count > 0:
             
-            bomb = Explosion(self.position.x, self.position.y, self.radius + bomb_radius, bomb_colour, True, bomb_dp)
+            bomb = Explosion(self.position.x, self.position.y, self.radius + bomb_radius + (d_radius * self.level), bomb_colour, True, bomb_dp + (d_dp * self.level))
             bomb.width = bomb_wave_width
             bomb.propagation = bomb_prog
             
@@ -190,10 +190,19 @@ class Player(CircleShape):
                 self.bomb_count -= 1
             self.bomb_cooldown = PLAYER_BOMB_COOLDOWN
 
-    def level_up(self):
-        self.level += 1
-        self.gun.upgrade()
+    def level_up(self): # max level 30
+        if self.level < max_level:
+            self.level += 1
+            self.gun.upgrade()
+    
+    def increase_health(self): #max health 100
+        d_health = 5
+        if self.health < max_health:
+            self.health += d_health
 
+    def increase_bomb(self): #max bomb 10
+        if self.bomb_count < max_bomb:
+            self.bomb_count += 1
 
 
                       

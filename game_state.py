@@ -34,6 +34,8 @@ class Game_state():
         self.bomb_counter = PLAYER_BOMB_COUNT
         self.level_counter = 0
 
+        self.difficulty = 0
+
     def __empty_groups(self):
         self.updatable.empty()
         self.drawable.empty()
@@ -49,12 +51,12 @@ class Game_state():
     def new_game(self):
         self.__empty_groups()
         self.__reset_state()
-        _ = AsteroidField()
+        self.af = AsteroidField()
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         return player
 
     def respawn(self): # boom could be seen over powerups
-        respawn_boom_final_radius = 200
+        
         #print(f"level_counter: {self.level_counter}")
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, self.level_counter)
         #player.level = self.level_counter
@@ -62,11 +64,13 @@ class Game_state():
         #self.health_counter = PLAYER_HEALTH
         #self.bomb_counter = PLAYER_BOMB_COUNT
         self.dead = False
+        #player.bomb()
         
-        respawn_boom = Explosion(player.position.x, player.position.y, respawn_boom_final_radius, "white")
-        respawn_boom.radius = player.radius + 10
+        respawn_boom_final_radius = 200
+        respawn_boom = Explosion(player.position.x, player.position.y, respawn_boom_final_radius, "black")
+        respawn_boom.radius = 190
         respawn_boom.width = 10
-        respawn_boom.propagation = 200 #150
+        respawn_boom.propagation = 1000 #150
         respawn_boom.collision_on = True
         respawn_boom.dp = RESPAWN_BOOM
         respawn_boom.no_score = True

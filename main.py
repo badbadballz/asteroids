@@ -1,6 +1,7 @@
 import sys
 import pygame
 import math
+#from math import ceil, floor?
 from constants import *
 from player import Player
 from asteroid import Asteroid

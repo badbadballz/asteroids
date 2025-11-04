@@ -11,7 +11,7 @@ class Shot(CircleShape):
          self.dp = dp
 
      def draw (self, screen):
-         pygame.draw.circle(screen, "yellow", self.position, self.radius, 0)
+         pygame.draw.circle(screen, "yellow", self.position, self.radius, 0) #yellow
 
      def update(self, dt):
          if self.life < 0:

@@ -1,7 +1,9 @@
 import pygame
 import random
 from asteroid import Asteroid
+#from game_state import Game_state
 from constants import *
+
 
 #wtf?
 class AsteroidField(pygame.sprite.Sprite):
@@ -31,18 +33,23 @@ class AsteroidField(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.spawn_timer = 0.0
+        #self.gs = gs
 
     def spawn(self, radius, position, velocity, rotate_speed):
         asteroid = Asteroid(position.x, position.y, radius)
         asteroid.velocity = velocity
         asteroid.rotate_speed = rotate_speed
-      
+
+    def spawn_pu(self, radius, position, velocity, rotate_speed):
+        asteroid = Asteroid(position.x, position.y, radius)
+        asteroid.velocity = velocity
+        asteroid.rotate_speed = rotate_speed  
         
 
     def update(self, dt):
         self.spawn_timer += dt
-        if self.spawn_timer > ASTEROID_SPAWN_RATE:
-            
+        if self.spawn_timer > ASTEROID_SPAWN_RATE: # difficulty /spawn, armor, boss asteroid
+             
                 
             self.spawn_timer = 0
 

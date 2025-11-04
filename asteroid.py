@@ -45,7 +45,7 @@ class Asteroid(CircleShape):
             pygame.draw.circle(screen, "red", self.position, self.radius, 1)
         pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
         pygame.draw.polygon(screen, "grey50", pointy_shape, 2)
-        
+        #pygame.draw.polygon(screen, "magenta", pointy_shape, 5)
       
     def update(self, dt):
         self.position += self.velocity * dt

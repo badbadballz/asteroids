@@ -43,7 +43,8 @@ class Powerup(CircleShape):
         match self.type:
             case "H":
                 #print("H")
-                player.health += 5
+                #player.health += 5
+                player.increase_health()
                 gs.score_counter += pu_score #should call reward_score
 
             case "S":
@@ -56,7 +57,8 @@ class Powerup(CircleShape):
 
             case "B":
                 #print("B")
-                player.bomb_count += 1
+                #player.bomb_count += 1
+                player.increase_bomb()
                 gs.score_counter += pu_score
 
             case "L":
