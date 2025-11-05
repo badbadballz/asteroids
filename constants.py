@@ -3,7 +3,7 @@ SCREEN_HEIGHT = 720
 
 ASTEROID_MIN_RADIUS = 20 # 20
 ASTEROID_KINDS = 4 # 3
-ASTEROID_SPAWN_RATE = 6 # seconds # 5
+ASTEROID_SPAWN_RATE = 1 # seconds # 5
 ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
 ASTEROID_SPLIT_ACC = 1.2
 ASTEROID_BASE_ROTATE_SPEED = 50 
@@ -36,8 +36,20 @@ BASE_AST_PU_CHANCE = 10
 MAX_PU_NUM = 4 
 
 Infinite_lives = False
-Infinite_bombs = False
+Infinite_bombs = True
 Collisions_on = True
 Player_collisions_on = False
 Draw_on = False
 #Bullet_collisions_on = True
+
+
+MAX_HEALTH = 100
+#max_level = 30
+MAX_LEVEL = 30
+MAX_BOMB = 10
+
+max_colour = "dodgerblue"
+max_bomb_colour = "mediumblue"
+
+#(ast spawn rate, 0 ast modifier, 0 boss ast, min start time, min level)
+difficulty_event = { "0": (ASTEROID_SPAWN_RATE, 0, 0, 0, 0)}

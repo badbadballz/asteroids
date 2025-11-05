@@ -7,7 +7,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
-from explosion import Explosion
+from explosion import Explosion, Implosion
 from powerup import Powerup
 from game_state import Game_state
 
@@ -32,7 +32,10 @@ def draw_score(screen, game_font, gs):
         bomb = game_font.render(str(f"B: {gs.bomb_counter}"), False, "orangered")
         screen.blit(bomb, (0, SCREEN_HEIGHT - gs.font_y * 2))
 
-        level = game_font.render(str(f"S: {gs.level_counter}"), False, "yellow")
+        if gs.level_counter >= MAX_LEVEL: # weird error!!?!
+             level = game_font.render(("S: MAX!"), False, max_colour) 
+        else:    
+            level = game_font.render(str(f"S: {gs.level_counter}"), False, "yellow")
         screen.blit(level, (0, SCREEN_HEIGHT - gs.font_y * 3))
 
         life = game_font.render(str(f"L: {gs.life_counter}"), False, "white")
@@ -75,6 +78,7 @@ def main():
     AsteroidField.containers = (gs.updatable)
     Shot.containers = (gs.shots, gs.updatable, gs.drawable)
     Explosion.containers = (gs.explosions, gs.updatable, gs.drawable)
+    Implosion.containers = (gs.updatable, gs.drawable)
     Powerup.containers = (gs.powerups, gs.updatable, gs.drawable)
 
     player = gs.new_game()
@@ -98,7 +102,7 @@ def main():
                     ast.damage(COLLISION_DP * dt, "explode")
                     #if player.health <= 0: #gs.health_counter <= 0:, possible issue of called killed player to get .health?
                     if gs.dead == True:
-                        respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG 
+                        respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG # spawn S and minus S
                 for shot in gs.shots:
                     if shot.check_collision(ast):
                         shot.explode()
@@ -123,7 +127,7 @@ def main():
                 #print(len(gs.powerups))
                 if player.check_collision(pu):
                     pu.reward(player, gs)
-                    pu.explode() #make inverse explosion
+                    pu.implode() #make inverse explosion
 
 
         gs.update_player_info(player)   #implement player level , not gun level

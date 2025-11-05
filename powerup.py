@@ -2,7 +2,7 @@ import pygame
 import random
 from constants import * 
 from circleshape import CircleShape
-from explosion import Explosion
+from explosion import Explosion, Implosion
 
 class Powerup(CircleShape):
 
@@ -22,7 +22,7 @@ class Powerup(CircleShape):
         self.life = random.randint(PU_MIN_TIME, PU_MAX_TIME)
 
     def update(self, dt):
-        if self.life < 0:
+        if self.life <= 0:
              self.explode()
              return
         self.life  -= dt
@@ -35,6 +35,10 @@ class Powerup(CircleShape):
 
     def explode(self):
         _ = Explosion(self.position.x, self.position.y, self.radius - self.buffer, self.pu_types[self.type])
+        self.kill()
+
+    def implode(self):
+        _ = Implosion(self.position.x, self.position.y, self.radius - self.buffer, self.pu_types[self.type])
         self.kill()
 
     def reward(self, player, gs):

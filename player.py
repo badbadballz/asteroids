@@ -13,9 +13,9 @@ bomb_colour = "orangered" #"mediumblue" #"yellow"
 bomb_wave_width = 10 #10
 bomb_prog = 300 #300
 
-max_health = 100
-max_level = 30
-max_bomb = 10
+#max_health = 100
+#max_level = 30
+#max_bomb = 10
 min_cooldown = 0.05
 #max_shot_life = 2
 d_cooldown = 0.01
@@ -39,18 +39,32 @@ class Gun(): #odd speed, even life
         self.shot_radius = SHOT_RADIUS + min(self.player.level // 10, 3)
         self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * math.ceil(l) + 1)#self.player.level)
     
-        #print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
+        print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
     def fire(self, dt):
         if self.shot_timer <= 0:
             # create a new bullet (shot) object
             forward = pygame.Vector2(0, 1).rotate(self.player.rotation) 
             a = self.player.position - forward * self.player.radius #top of the triangle
-            bullet = Shot(a.x, a.y, self.shot_radius, self.shot_life, self.shot_dp)
+            #(self, x, y, radius, life, dp, explode_damage=False, explode_dp=0):
+            if self.player.level >= MAX_LEVEL: # lvl 30 / max / check if this scales down after death
+                #print("max!")
+                max_shot_dp = self.shot_dp * 1.2
+                max_explode_dp = self.shot_dp // 5
+                max_shot_cooldown = self.shot_cooldown / 1.1
+                bullet = Shot(a.x, a.y, self.shot_radius, self.shot_life, max_shot_dp, explode_damage=True, explode_dp=max_explode_dp , max=True)
+                self.shot_timer = max_shot_cooldown
+            elif self.player.level >= 20: # level 20 upgrade explosive shot
+                bullet = Shot(a.x, a.y, self.shot_radius, self.shot_life, self.shot_dp, explode_damage=True, explode_dp=self.shot_dp // 10)
+                self.shot_timer = self.shot_cooldown
+            else:
+                #print("No power")
+                bullet = Shot(a.x, a.y, self.shot_radius, self.shot_life, self.shot_dp)
+                self.shot_timer = self.shot_cooldown
             #print(f"{self.velocity} {self.velocity.rotate(self.rotation)} {forward} {forward * PLAYER_SHOOT_SPEED}")
             bullet.velocity = self.player.velocity + (self.shot_speed * forward * -dt)
             
-            self.shot_timer = self.shot_cooldown
+            
             
 
     def upgrade(self):
@@ -180,8 +194,10 @@ class Player(CircleShape):
         d_dp = 10
 
         if self.bomb_cooldown <= 0 and self.bomb_count > 0:
-            
-            bomb = Explosion(self.position.x, self.position.y, self.radius + bomb_radius + (d_radius * self.level), bomb_colour, True, bomb_dp + (d_dp * self.level))
+            if self.level >= MAX_LEVEL:
+                bomb = Explosion(self.position.x, self.position.y, self.radius + bomb_radius + (d_radius * self.level) * 1.1, max_bomb_colour, True, bomb_dp + (d_dp * self.level))
+            else:
+                bomb = Explosion(self.position.x, self.position.y, self.radius + bomb_radius + (d_radius * self.level), bomb_colour, True, bomb_dp + (d_dp * self.level))
             bomb.width = bomb_wave_width
             bomb.propagation = bomb_prog
             
@@ -191,17 +207,17 @@ class Player(CircleShape):
             self.bomb_cooldown = PLAYER_BOMB_COOLDOWN
 
     def level_up(self): # max level 30
-        if self.level < max_level:
+        if self.level < MAX_LEVEL:
             self.level += 1
             self.gun.upgrade()
     
     def increase_health(self): #max health 100
         d_health = 5
-        if self.health < max_health:
+        if self.health < MAX_HEALTH:
             self.health += d_health
 
     def increase_bomb(self): #max bomb 10
-        if self.bomb_count < max_bomb:
+        if self.bomb_count < MAX_BOMB:
             self.bomb_count += 1
 
 

@@ -18,6 +18,7 @@ class Game_state():
         self.asteroids = pygame.sprite.Group()
         self.shots = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
+        #self.implosions = pygame.sprite.Group()
         self.powerups = pygame.sprite.Group()
         self.font_y = 0
         
@@ -51,7 +52,7 @@ class Game_state():
     def new_game(self):
         self.__empty_groups()
         self.__reset_state()
-        self.af = AsteroidField()
+        self.af = AsteroidField(self)
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         return player
 
