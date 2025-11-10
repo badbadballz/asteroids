@@ -26,7 +26,7 @@ class Powerup(CircleShape):
              self.explode()
              return
         self.life  -= dt
-        self.position += self.velocity * dt
+        self.position += self.velocity # * dt
 
 
     def draw(self, screen):

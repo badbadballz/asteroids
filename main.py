@@ -10,6 +10,7 @@ from shot import Shot
 from explosion import Explosion, Implosion
 from powerup import Powerup
 from game_state import Game_state
+from logger import log_state
 
 
 def draw_score(screen, game_font, gs):
@@ -32,7 +33,7 @@ def draw_score(screen, game_font, gs):
         bomb = game_font.render(str(f"B: {gs.bomb_counter}"), False, "orangered")
         screen.blit(bomb, (0, SCREEN_HEIGHT - gs.font_y * 2))
 
-        if gs.level_counter >= MAX_LEVEL: # weird error!!?!
+        if gs.level_counter >= MAX_LEVEL:
              level = game_font.render(("S: MAX!"), False, max_colour) 
         else:    
             level = game_font.render(str(f"S: {gs.level_counter}"), False, "yellow")
@@ -82,25 +83,22 @@ def main():
     Powerup.containers = (gs.powerups, gs.updatable, gs.drawable)
 
     player = gs.new_game()
-    #player = gs.respawn() # consider new game and respawning @ same method
-
+  
     while True:
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-          
+        log_state()
+
         gs.updatable.update(dt)
         
         if Collisions_on: 
             for ast in gs.asteroids:
                 if not gs.dead and Player_collisions_on and player.check_collision(ast):
-                    #if  gs.health_counter > 0: 
-                    gs.dead = player.damage(COLLISION_DP * dt)
-                        #print (f"health_counter: {health_counter}")
-                       
+                    gs.dead = player.damage(COLLISION_DP * dt, gs.spawn_powerup)
+                        #print (f"health_counter: {health_counter}")   
                     ast.damage(COLLISION_DP * dt, "explode")
-                    #if player.health <= 0: #gs.health_counter <= 0:, possible issue of called killed player to get .health?
                     if gs.dead == True:
                         respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG # spawn S and minus S
                 for shot in gs.shots:
@@ -111,6 +109,7 @@ def main():
                 for explosion in gs.explosions:
                     if explosion.collision_on and explosion.check_collision(ast): # explosions only kill asteroids
                         if not explosion.no_score:
+                            #print("damage from ex, score")
                             ast.damage(explosion.dp * dt, "explode", gs.spawn_powerup, gs.reward_score)
                         else:
                             ast.damage(explosion.dp * dt, "explode", gs.spawn_powerup)
@@ -130,7 +129,7 @@ def main():
                     pu.implode() #make inverse explosion
 
 
-        gs.update_player_info(player)   #implement player level , not gun level
+        gs.update_player_info(player)   
                      
         screen.fill(0)
         for sp in gs.drawable:

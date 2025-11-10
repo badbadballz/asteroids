@@ -1,11 +1,10 @@
 import pygame
 import random
 from asteroid import Asteroid
-#from game_state import Game_state
 from constants import *
 
 
-#wtf?
+
 class AsteroidField(pygame.sprite.Sprite):
     edges = [
         [
@@ -56,10 +55,15 @@ class AsteroidField(pygame.sprite.Sprite):
             # spawn a new asteroid at a random edge
             edge = random.choice(self.edges)
             speed = random.randint(40, 100)
-            velocity = edge[0] * speed
+            velocity = edge[0] * speed 
             velocity = velocity.rotate(random.randint(-30, 30))
             #position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
             position = edge[1](random.uniform(0, 1))
             kind = random.randint(1, ASTEROID_KINDS)
             rotate_speed = ASTEROID_BASE_ROTATE_SPEED * 1 / kind * random.randint(-ASTEROID_ROTATE_SPEED_RANDOM, ASTEROID_ROTATE_SPEED_RANDOM)
-            self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity, rotate_speed)
+            self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity * dt, rotate_speed * dt)
+
+
+#(ast spawn rate, 0 ast modifier, 0 boss ast, min start time, min level)
+    def increase_difficulty(self, spawn_rate, ast_armor, boss):
+        pass

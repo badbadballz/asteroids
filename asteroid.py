@@ -48,10 +48,10 @@ class Asteroid(CircleShape):
         #pygame.draw.polygon(screen, "magenta", pointy_shape, 5)
       
     def update(self, dt):
-        self.position += self.velocity * dt
-        self.rotation += self.rotate_speed * dt
+        self.position += self.velocity#* dt
+        self.rotation += self.rotate_speed #* dt
      
-    def damage(self, dp, type="bump", rewardfunction=None, scorefunction=None): #complicated
+    def damage(self, dp, type="bump", rewardfunction=None, scorefunction=None):
         self.life -= dp
         if self.life <= 0:
             return self.split(type, rewardfunction, scorefunction)

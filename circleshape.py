@@ -28,13 +28,10 @@ class CircleShape(pygame.sprite.Sprite):
         return (self.radius + circleshape.radius) > distance_between
     
     def out_of_bounds(self): 
-        buffer = self.radius * 2 #self.radius * 2 # this may have finally stopped annoying draw line artifacts, not...
+        buffer = self.radius * 2 
         lower_left = ( -(self.radius) + buffer, SCREEN_HEIGHT + self.radius - buffer) #pygame.Vector2()
         upper_right = (SCREEN_WIDTH + self.radius - buffer, -(self.radius) + buffer)#pygame.Vector2()
         
-        #lower_left.xy = -(self.radius), SCREEN_HEIGHT + self.radius
-        #upper_right.xy = SCREEN_WIDTH + self.radius, -(self.radius)
-
         pos = self.position
 
         if (pos.x < lower_left[0] or pos.x > upper_right[0]

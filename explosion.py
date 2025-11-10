@@ -7,7 +7,6 @@ from constants import *
 default = "orange"
 starting_radius = 1
 
-#make this more general / implosion
 class Explosion (CircleShape):
     
     def __init__(self, x, y, radius, colour=default, collision_on=False, dp=0):
@@ -19,13 +18,10 @@ class Explosion (CircleShape):
         self.collision_on = collision_on
         self.dp = dp # damage it causes
         self.no_score = False
-        #self.wave_width = 5 + radius // 5
-        #self.time = radius * 5
-        #self.implode = implode
+
 
     def draw(self, screen):
-        #print(propagation)
-        pygame.draw.circle(screen, self.colour , self.position, self.radius, self.width) #self.wave_width)
+        pygame.draw.circle(screen, self.colour , self.position, self.radius, self.width) 
         
 
     def update(self, dt):
@@ -34,9 +30,6 @@ class Explosion (CircleShape):
         else:
             self.kill()
         self.position += self.velocity 
-        
-    def check_end(self): # not used
-        return  self.radius >= self.final_radius
     
 class Implosion (CircleShape):
     
@@ -46,18 +39,14 @@ class Implosion (CircleShape):
         self.colour = colour
         self.width = 0     
         self.propagation = 200 
-        #self.collision_on = collision_on
-        #self.dp = dp # damage it causes
-        #self.no_score = False
-    
+
     def draw(self, screen):
-        #print(propagation)
+
         pygame.draw.circle(screen, self.colour , self.position, self.radius, self.width) #self.wave_width)
         
 
     def update(self, dt):
         if self.radius >= self.final_radius:
-             #print("implosion!")
              self.radius -= dt * self.propagation
         else:
             self.kill()

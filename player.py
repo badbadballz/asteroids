@@ -13,11 +13,8 @@ bomb_colour = "orangered" #"mediumblue" #"yellow"
 bomb_wave_width = 10 #10
 bomb_prog = 300 #300
 
-#max_health = 100
-#max_level = 30
-#max_bomb = 10
+
 min_cooldown = 0.05
-#max_shot_life = 2
 d_cooldown = 0.01
 d_life = 0.05
 d_dp = 2
@@ -25,8 +22,10 @@ d_radius = 1
 max_radius = 6
 d_speed = 20
 
+#starting_level = 30 
+
 # Player lvl: 0, cooldown: 0.3, life: 0.9, dp: 10, rad: 3 speed: 351
-# Player lvl: 30, cooldown: 0.05, life: 1.65, dp: 70, rad: 6 speed: 651
+# Player lvl: 30, cooldown: 0.05, life: 1.65, dp: 70, rad: 6 speed: 651 / exploding shot dp may be too low!
 
 class Gun(): #odd speed, even life
     def __init__(self, player):
@@ -39,7 +38,7 @@ class Gun(): #odd speed, even life
         self.shot_radius = SHOT_RADIUS + min(self.player.level // 10, 3)
         self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * math.ceil(l) + 1)#self.player.level)
     
-        print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
+        #print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
     def fire(self, dt):
         if self.shot_timer <= 0:
@@ -50,12 +49,12 @@ class Gun(): #odd speed, even life
             if self.player.level >= MAX_LEVEL: # lvl 30 / max / check if this scales down after death
                 #print("max!")
                 max_shot_dp = self.shot_dp * 1.2
-                max_explode_dp = self.shot_dp // 5
+                max_explode_dp = max_shot_dp
                 max_shot_cooldown = self.shot_cooldown / 1.1
                 bullet = Shot(a.x, a.y, self.shot_radius, self.shot_life, max_shot_dp, explode_damage=True, explode_dp=max_explode_dp , max=True)
                 self.shot_timer = max_shot_cooldown
             elif self.player.level >= 20: # level 20 upgrade explosive shot
-                bullet = Shot(a.x, a.y, self.shot_radius, self.shot_life, self.shot_dp, explode_damage=True, explode_dp=self.shot_dp // 10)
+                bullet = Shot(a.x, a.y, self.shot_radius, self.shot_life, self.shot_dp, explode_damage=True, explode_dp=self.shot_dp)
                 self.shot_timer = self.shot_cooldown
             else:
                 #print("No power")
@@ -131,17 +130,20 @@ class Player(CircleShape):
         return ((a_radius + circleshape.radius) > distance_between_a or
                 (b_radius + circleshape.radius) > distance_between_b)
 
-    def damage(self, dp):
+    def damage(self, dp, rewardfunction):
         self.health -= dp
         if self.health <= 0:
+             self.level -= rewardfunction(self, "player") # minus the level, gives corresponding powerups in death
+             #print(f"player l after death = - {level}")
+             #self.level -= int(deduct_lvl)
              self.explode()
              return True # dead
         else:
             return False
         
-    def explode(self):
+    def explode(self): #release Ss
          extra_boom = 20
-         _ = Explosion(self.position.x, self.position.y, self.radius + extra_boom, "yellow", True, bomb_dp) 
+         _ = Explosion(self.position.x, self.position.y, self.radius + extra_boom, "yellow", True, 1000)#bomb_dp) 
          self.kill()
 
 

@@ -34,9 +34,9 @@ class Shot(CircleShape):
      def explode(self):
         if self.explode_damage:
             if self.max:
-                ex = Explosion(self.position.x, self.position.y, self.radius * 6, max_colour, collision_on=True, dp=self.explode_dp)
+                ex = Explosion(self.position.x, self.position.y, self.radius * 12, max_colour, collision_on=True, dp=self.explode_dp)
             else:
-                ex = Explosion(self.position.x, self.position.y, self.radius * 4, "yellow", collision_on=True, dp=self.explode_dp)
+                ex = Explosion(self.position.x, self.position.y, self.radius * 8, "yellow", collision_on=True, dp=self.explode_dp)
             ex.width = 10
         else:
             _ = Explosion(self.position.x, self.position.y, self.radius + 5, "yellow")
