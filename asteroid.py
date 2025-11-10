@@ -8,7 +8,7 @@ from powerup import Powerup
 
 class Asteroid(CircleShape):
 
-    def __init__(self, x, y, radius):
+    def __init__(self, x, y, radius, armor=0):
         super().__init__(x, y, radius)
         self.rotate_speed = 0
         self.rotation = 0
@@ -16,6 +16,8 @@ class Asteroid(CircleShape):
         self.splited = False
 
         self.spoke_vectors = self.generate_asteroid()
+
+        self.armor = armor
     
     def generate_asteroid(self):
         min_angle = 30 #30
@@ -48,8 +50,8 @@ class Asteroid(CircleShape):
         #pygame.draw.polygon(screen, "magenta", pointy_shape, 5)
       
     def update(self, dt):
-        self.position += self.velocity#* dt
-        self.rotation += self.rotate_speed #* dt
+        self.position += self.velocity #* dt
+        self.rotation += self.rotate_speed  #* dt
      
     def damage(self, dp, type="bump", rewardfunction=None, scorefunction=None):
         self.life -= dp

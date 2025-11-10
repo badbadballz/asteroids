@@ -100,7 +100,8 @@ def main():
                         #print (f"health_counter: {health_counter}")   
                     ast.damage(COLLISION_DP * dt, "explode")
                     if gs.dead == True:
-                        respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG # spawn S and minus S
+                        respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG
+                        gs.reset_d_interval() # reset the timer for increasing difficulty
                 for shot in gs.shots:
                     if shot.check_collision(ast):
                         shot.explode()
@@ -156,8 +157,10 @@ def main():
                     gs.life_counter -= 1
 
         if not gs.game_over:
-            gs.time_counter += dt 
-        
+            gs.time_counter += dt # increment timer
+            gs.calculate_difficulty()
+            #print(gs.time_counter)
+
         pygame.display.flip()   
 
         dt = clock.tick(120) / 1000

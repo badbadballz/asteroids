@@ -38,7 +38,7 @@ MAX_PU_NUM = 2
 Infinite_lives = False
 Infinite_bombs = True
 Collisions_on = True
-Player_collisions_on = True
+Player_collisions_on = False
 Draw_on = False
 #Bullet_collisions_on = True
 
@@ -51,5 +51,11 @@ MAX_BOMB = 10
 max_colour = "lightblue"
 max_bomb_colour = "mediumblue"
 
-#(ast spawn rate, 0 ast modifier, 0 boss ast, min start time, min level)
-difficulty_event = { "0": (ASTEROID_SPAWN_RATE, 0, 0, 0, 0)}
+#(ast spawn rate, 0 ast modifier, 0 boss ast)    (min start time, min level)
+difficulty_event = {    0 : (ASTEROID_SPAWN_RATE, 0, 0, 0, 0),
+                        1 : (ASTEROID_SPAWN_RATE, 0, 0, 0, 0)
+                    }
+
+MAX_DIFF_LEVEL = 18
+TIME_INTERVAL = 120
+level_interval = 5

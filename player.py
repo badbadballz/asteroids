@@ -5,7 +5,7 @@ from shot import Shot
 from explosion import Explosion
 from constants import *
 
-#lvl 10, increase bomb, lvl 20, explosive shot,  lvl max/30, blue mediumblue, dodgerblue
+#lvl 10, bomb suck pu, lvl 20, explosive shot,  lvl max/30, blue mediumblue, dodgerblue
 
 bomb_dp = 100 #1000
 bomb_radius = 100 #200
@@ -84,7 +84,7 @@ class Gun(): #odd speed, even life
 
 class Player(CircleShape):
 
-    def __init__(self, x, y, level=0):
+    def __init__(self, x, y, level=0): # changed to start at level 1
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.rotate_speed = 0

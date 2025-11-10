@@ -1,6 +1,7 @@
 import pygame
 import random
 from asteroid import Asteroid
+from powerup import Powerup
 from constants import *
 
 
@@ -34,27 +35,32 @@ class AsteroidField(pygame.sprite.Sprite):
         self.spawn_timer = 0.0
         self.gs = gs
 
+        self.spawn_rate = ASTEROID_SPAWN_RATE
+        self.min_ast_vel = 40
+        self.max_ast_vel = 100
+        self.ast_armor = 0
+
     def spawn(self, radius, position, velocity, rotate_speed):
-        asteroid = Asteroid(position.x, position.y, radius)
+        asteroid = Asteroid(position.x, position.y, radius, self.ast_armor)
         asteroid.velocity = velocity
         asteroid.rotate_speed = rotate_speed
 
-    def spawn_pu(self, radius, position, velocity, rotate_speed):
-        asteroid = Asteroid(position.x, position.y, radius)
-        asteroid.velocity = velocity
-        asteroid.rotate_speed = rotate_speed  
+    def spawn_pu(self, radius, position, velocity):
+        pu = Powerup(position.x, position.y, radius, "S")
+        pu.velocity = velocity
+        #pu.rotate_speed = rotate_speed  
         
 
     def update(self, dt):
         self.spawn_timer += dt
-        if self.spawn_timer > ASTEROID_SPAWN_RATE: # difficulty /spawn, armor, boss asteroid
+        if self.spawn_timer > self.spawn_rate: # difficulty /spawn, armor, boss asteroid
              
                 
             self.spawn_timer = 0
 
             # spawn a new asteroid at a random edge
             edge = random.choice(self.edges)
-            speed = random.randint(40, 100)
+            speed = random.randint(self.min_ast_vel, self.max_ast_vel)
             velocity = edge[0] * speed 
             velocity = velocity.rotate(random.randint(-30, 30))
             #position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
@@ -64,6 +70,14 @@ class AsteroidField(pygame.sprite.Sprite):
             self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity * dt, rotate_speed * dt)
 
 
-#(ast spawn rate, 0 ast modifier, 0 boss ast, min start time, min level)
-    def increase_difficulty(self, spawn_rate, ast_armor, boss):
-        pass
+#(ast spawn rate, 0 ast modifier, 0 boss ast) (min start time, min level)
+    def increase_difficulty(self, d_rate, ast_armor=0, boss=0):
+        self.spawn_rate = max(self.spawn_rate / d_rate, 1)
+        self.min_ast_vel = min(int(self.min_ast_vel * d_rate), 200)
+        self.max_ast_vel = min(int(self.max_ast_vel * d_rate), 500)
+        print(f"new sr: {self.spawn_rate}, min: {self.min_ast_vel}, max: {self.max_ast_vel}")
+
+#difficulty level: 18
+#new sr: 1, min: 200, max: 500
+#difficulty level: 19
+#new sr: 1, min: 200, max: 500

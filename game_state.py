@@ -34,6 +34,7 @@ class Game_state():
         self.level_counter = 0
 
         self.difficulty = 0
+        self.d_interval = TIME_INTERVAL
 
     def __empty_groups(self):
         self.updatable.empty()
@@ -54,16 +55,14 @@ class Game_state():
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         return player
 
-    def respawn(self): # boom could be seen over powerups
-        
-        #print(f"level_counter: {self.level_counter}")
+    def respawn(self): 
+ 
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, self.level_counter)
-        #player.level = self.level_counter
+       
         self.update_player_info(player)
-        #self.health_counter = PLAYER_HEALTH
-        #self.bomb_counter = PLAYER_BOMB_COUNT
         self.dead = False
         #player.bomb()
+        #self.d_interval = self.time_counter + TIME_INTERVAL # reset difficulty progression
         
         respawn_boom_final_radius = 200
         respawn_boom = Explosion(player.position.x, player.position.y, respawn_boom_final_radius, "black")
@@ -136,7 +135,7 @@ class Game_state():
                         velocity = obj.velocity.rotate(angle) * v_random 
                         pu = Powerup(obj.position.x, obj.position.y, "S")
                         pu.velocity = velocity
-                        print(f"give S, {n}, velocity: {velocity}, mag: {velocity.magnitude()}")
+                        #print(f"give S, {n}, velocity: {velocity}, mag: {velocity.magnitude()}")
                         n += 1
                 #print(f"number: {number}")
                 return number
@@ -155,4 +154,17 @@ class Game_state():
     #(ast spawn rate, 0 ast modifier, 0 boss ast, min start time, min level)
         
         
-    
+    def calculate_difficulty(self): # stopping/ how to calculate difficulty when player is respawning???
+        
+        
+        if (self.d_interval - self.time_counter) <= 0 and self.difficulty < MAX_DIFF_LEVEL:
+                
+                    self.difficulty += 1
+                    print(f"difficulty level: {self.difficulty}")
+                    self.af.increase_difficulty(1.1)
+                    self.reset_d_interval()
+
+         #or (player_level > 0 and player_level % level_interval == 0): issue with multiple S at same time
+
+    def reset_d_interval(self):
+        self.d_interval = self.time_counter + TIME_INTERVAL
