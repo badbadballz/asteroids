@@ -1,7 +1,6 @@
-import sys
+#import sys
 import pygame
 import math
-#from math import ceil, floor?
 from constants import *
 from player import Player
 from asteroid import Asteroid
@@ -167,9 +166,7 @@ def main():
         
         if gs.reset:
             player = gs.new_game()
-            #player = gs.respawn()
-       
-            
+                    
             
 if __name__ == "__main__":
     main()

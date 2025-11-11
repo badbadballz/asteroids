@@ -8,6 +8,7 @@ ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
 ASTEROID_SPLIT_ACC = 1.2
 ASTEROID_BASE_ROTATE_SPEED = 50 
 ASTEROID_ROTATE_SPEED_RANDOM = 5
+AST_LIMIT = 5
 
 PLAYER_RADIUS = 20 #20
 PLAYER_TURN_SPEED = 3 #4
@@ -33,7 +34,9 @@ PU_SPLIT_ACC = 1.3
 PU = ["H", "S", "B", "L"]
 PU_WEIGHTS = [40,35,15,10] # H, S, B, L
 BASE_AST_PU_CHANCE = 10
-MAX_PU_NUM = 2  
+MAX_PU_NUM = 3  
+CHANCE_TO_SPAWN_PU_NO_PU = 3 # 1 in N chance to spawn "S" PU when no other PU on screen
+PU_SPAWN_RATE = 5
 
 Infinite_lives = False
 Infinite_bombs = True
@@ -57,5 +60,5 @@ difficulty_event = {    0 : (ASTEROID_SPAWN_RATE, 0, 0, 0, 0),
                     }
 
 MAX_DIFF_LEVEL = 18
-TIME_INTERVAL = 120
+TIME_INTERVAL = 1
 level_interval = 5

@@ -74,11 +74,20 @@ class Game_state():
         respawn_boom.no_score = True
         return player
     
+    def check_num_ast(self):
+        print(f"num ast currently = {len(self.asteroids)}")
+        return len(self.asteroids)
+
+    #method to return number of pu in the area
+    def check_num_powerups(self):
+        print(f"num pu currently = {len(self.powerups)}")
+        return len(self.powerups)
+
     def spawn_powerup(self, obj, mode="ast"):
         match mode:
             case "ast":
              #print(f"ast, num pu currently = {len(self.powerups)}")
-             if len(self.powerups) <= MAX_PU_NUM:
+             if self.check_num_powerups() < MAX_PU_NUM:
                 
                 chance = BASE_AST_PU_CHANCE + obj.radius - ASTEROID_MIN_RADIUS #smallest ast = base chance
                 roll = random.randint(1, 100)
