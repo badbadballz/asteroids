@@ -17,7 +17,7 @@ class Asteroid(CircleShape):
 
         self.spoke_vectors = self.generate_asteroid()
 
-        self.armor = armor
+        self.armor = armor # 0, 1, 2, 3 * BASE_ARMOR
     
     def generate_asteroid(self):
         min_angle = 30 #30
@@ -46,7 +46,8 @@ class Asteroid(CircleShape):
         if Draw_on:
             pygame.draw.circle(screen, "red", self.position, self.radius, 1)
         pointy_shape = [self.position + spoke.rotate(self.rotation) for spoke  in self.spoke_vectors]
-        pygame.draw.polygon(screen, "grey50", pointy_shape, 2)
+        line = min(5, 2 + self.armor)
+        pygame.draw.polygon(screen, "grey50", pointy_shape, line)
         #pygame.draw.polygon(screen, "magenta", pointy_shape, 5)
       
     def update(self, dt):
@@ -54,7 +55,13 @@ class Asteroid(CircleShape):
         self.rotation += self.rotate_speed  #* dt
      
     def damage(self, dp, type="bump", rewardfunction=None, scorefunction=None):
-        self.life -= dp
+        match type:
+            case "bump":
+                resultant_dp = dp
+            case _:
+                resultant_dp = max(0, dp - (self.armor * BASE_ARMOR))
+                print(f"resultant_dp: {resultant_dp}, armor: {self.armor}, dp: {dp}")
+        self.life -= resultant_dp
         if self.life <= 0:
             return self.split(type, rewardfunction, scorefunction)
         return 0
@@ -97,11 +104,11 @@ class Asteroid(CircleShape):
             ast_1_pos = self.position + direction_1 * self.radius #why self.radius?
             ast_2_pos = self.position + direction_2 * self.radius
 
-            ast_1 = Asteroid(ast_1_pos.x, ast_1_pos.y, smaller_radius)
+            ast_1 = Asteroid(ast_1_pos.x, ast_1_pos.y, smaller_radius, self.armor)
             ast_1.velocity = velocity_1 * ASTEROID_SPLIT_ACC
             ast_1.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC 
             
-            ast_2 = Asteroid(ast_2_pos.x, ast_2_pos.y, smaller_radius)
+            ast_2 = Asteroid(ast_2_pos.x, ast_2_pos.y, smaller_radius, self.armor)
             ast_2.velocity = velocity_2 * ASTEROID_SPLIT_ACC
             ast_2.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC
             

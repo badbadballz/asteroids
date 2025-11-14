@@ -94,7 +94,7 @@ def main():
         
         if Collisions_on: 
             for ast in gs.asteroids:
-                if not gs.dead and Player_collisions_on and player.check_collision(ast):
+                if not gs.dead and Player_collisions_on and (not gs.is_invulnerable()) and player.check_collision(ast):
                     gs.dead = player.damage(COLLISION_DP * dt, gs.spawn_powerup)
                         #print (f"health_counter: {health_counter}")   
                     ast.damage(COLLISION_DP * dt, "explode")

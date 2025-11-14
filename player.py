@@ -107,7 +107,8 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        line = min(5, 2 + int((self.health - PLAYER_HEALTH) // 10))
+        line = min(5, 2 + int((self.health - PLAYER_HEALTH) // 10)) #possible bug here
+        #print(f"player line: {line}")
         pygame.draw.polygon(screen, "white", self.triangle(), line)
         if Draw_on:
             forward = pygame.Vector2(0, 1).rotate(self.rotation)

@@ -44,7 +44,11 @@ class AsteroidField(pygame.sprite.Sprite):
         self.ast_armor = 0
 
     def spawn(self, radius, position, velocity, rotate_speed):
-        asteroid = Asteroid(position.x, position.y, radius, self.ast_armor)
+        roll_armor_ast = random.randint(1,10)
+        if roll_armor_ast <= CHANCE_ARMOR_AST:
+            asteroid = Asteroid(position.x, position.y, radius, self.ast_armor)
+        else:
+            asteroid = Asteroid(position.x, position.y, radius)
         asteroid.velocity = velocity 
         asteroid.rotate_speed = rotate_speed
 
@@ -72,7 +76,7 @@ class AsteroidField(pygame.sprite.Sprite):
         if self.PU_spawn_timer > self.PU_spawn_rate:
             self.PU_spawn_timer = 0
             roll = random.randint(1, CHANCE_TO_SPAWN_PU_NO_PU)
-            print(f"roll for PU = {roll}")
+            #print(f"roll for PU = {roll}")
             if self.gs.check_num_powerups() == 0 and roll == 1:
                 edge = random.choice(self.edges)
                 speed = random.randint(self.min_ast_vel, self.max_ast_vel)
@@ -88,7 +92,8 @@ class AsteroidField(pygame.sprite.Sprite):
         self.min_ast_vel = min(int(self.min_ast_vel * d_rate), 200)
         self.max_ast_vel = min(int(self.max_ast_vel * d_rate), 500)
         self.num_ast = round(self.num_ast * d_rate)
-        print(f"new sr: {self.spawn_rate}, min: {self.min_ast_vel}, max: {self.max_ast_vel}, num_ast: {self.num_ast}")
+        self.ast_armor = ast_armor
+        #print(f"new sr: {self.spawn_rate}, min: {self.min_ast_vel}, max: {self.max_ast_vel}, num_ast: {self.num_ast}, armor: {self.ast_armor}")
 
 #difficulty level: 18
 #new sr: 1, min: 200, max: 500

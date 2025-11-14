@@ -32,9 +32,11 @@ class Game_state():
         self.score_counter = 0
         self.bomb_counter = PLAYER_BOMB_COUNT
         self.level_counter = 0
-
+        
         self.difficulty = 0
-        self.d_interval = TIME_INTERVAL
+        self.d_interval = D_TIME_INTERVAL
+
+        self.invulnerable_counter = 0
 
     def __empty_groups(self):
         self.updatable.empty()
@@ -72,15 +74,21 @@ class Game_state():
         respawn_boom.collision_on = True
         respawn_boom.dp = RESPAWN_BOOM
         respawn_boom.no_score = True
+        self.invulnerable_counter = self.time_counter + INVULNERABLE_TIME 
         return player
     
+    def is_invulnerable(self):
+        #print(f"Checking Invulnerable! {self.invulnerable_counter} : {self.time_counter}") 
+        return self.invulnerable_counter > self.time_counter
+       
+
     def check_num_ast(self):
-        print(f"num ast currently = {len(self.asteroids)}")
+        #print(f"num ast currently = {len(self.asteroids)}")
         return len(self.asteroids)
 
     #method to return number of pu in the area
     def check_num_powerups(self):
-        print(f"num pu currently = {len(self.powerups)}")
+        #print(f"num pu currently = {len(self.powerups)}")
         return len(self.powerups)
 
     def spawn_powerup(self, obj, mode="ast"):
@@ -169,11 +177,12 @@ class Game_state():
         if (self.d_interval - self.time_counter) <= 0 and self.difficulty < MAX_DIFF_LEVEL:
                 
                     self.difficulty += 1
-                    print(f"difficulty level: {self.difficulty}")
-                    self.af.increase_difficulty(1.1)
+                    #print(f"difficulty level: {self.difficulty}")
+                    ast_armor = self.level_counter // 10 # armor scales every 10 levels
+                    self.af.increase_difficulty(1.1, ast_armor)   #1.1 difficulty scale
                     self.reset_d_interval()
 
          #or (player_level > 0 and player_level % level_interval == 0): issue with multiple S at same time
 
     def reset_d_interval(self):
-        self.d_interval = self.time_counter + TIME_INTERVAL
+        self.d_interval = self.time_counter + D_TIME_INTERVAL
