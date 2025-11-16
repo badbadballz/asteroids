@@ -46,7 +46,10 @@ def draw_score(screen, game_font, gs):
 def draw_gameover(screen, game_font, gs):
         f_time_counter = math.floor(gs.time_counter)
         text1 = "Game Over"
-        text2 = f"Score: {f_time_counter + gs.score_counter}"
+        f_time = f"Time: {f_time_counter}"
+        diff = f"Difficulity: {gs.difficulty}"
+        p_level = f"Level: {gs.level_counter}"
+        text2 = f"Score: {(f_time_counter + gs.score_counter + gs.level_counter) * (1 + gs.difficulty)}" # havent done final score yet
         (over_x1, over_y1) = game_font.size(text1)
         (over_x2, over_y2) = game_font.size(text2)
         over_text1 = game_font.render(str(text1), False, "white")
@@ -80,7 +83,7 @@ def main():
     Explosion.containers = (gs.explosions, gs.updatable, gs.drawable)
     Implosion.containers = (gs.updatable, gs.drawable)
     Powerup.containers = (gs.powerups, gs.updatable, gs.drawable)
-
+    
     player = gs.new_game()
   
     while True:

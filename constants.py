@@ -44,7 +44,7 @@ PU_SPAWN_RATE = 5
 Infinite_lives = False
 Infinite_bombs = True
 Collisions_on = True
-Player_collisions_on = False
+Player_collisions_on = True
 Draw_on = False
 #Bullet_collisions_on = True
 

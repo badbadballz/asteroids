@@ -1,6 +1,6 @@
 import pygame
 import math
-from circleshape import CircleShape
+from circleshape import CircleShape, Flasher
 from shot import Shot
 from explosion import Explosion
 from constants import *
@@ -21,6 +21,10 @@ d_dp = 2
 d_radius = 1
 max_radius = 6
 d_speed = 20
+
+
+class Exhaust():
+    pass
 
 #starting_level = 30 
 
@@ -95,7 +99,10 @@ class Player(CircleShape):
         self.level = level
         #print(f"new player with level:{self.level}")
         self.gun = Gun(self)
-       
+        self.collision_flasher = Flasher(0.1, 0.1) # can i do some fancy function decorate?
+        self.respawn_flasher = Flasher(0.2, 0.2, INVULNERABLE_TIME)
+        print(f"respawn_flasher: {self.respawn_flasher.on}")
+        #self.respawn_flasher.on = True
 
 # in the player class
     def triangle(self):
@@ -107,9 +114,6 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        line = min(5, 2 + int((self.health - PLAYER_HEALTH) // 10)) #possible bug here
-        #print(f"player line: {line}")
-        pygame.draw.polygon(screen, "white", self.triangle(), line)
         if Draw_on:
             forward = pygame.Vector2(0, 1).rotate(self.rotation)
             a = self.position + forward * self.radius / 3
@@ -117,6 +121,22 @@ class Player(CircleShape):
             pygame.draw.circle(screen, "red", a, self.radius / 3, 1) #3.8
             pygame.draw.circle(screen, "red", b, self.radius / 2, 1)
         
+        if self.collision_flasher.on:
+            self.collision_flasher.on = False
+            if self.collision_flasher.can_flash():
+                self.draw_self(screen)
+        elif self.respawn_flasher.on: 
+            #print(f"respawn_flasher_counter: {self.respawn_flasher.on_time_counter}")
+            if self.respawn_flasher.can_flash():
+                self.draw_self(screen)
+        else:
+            self.draw_self(screen)
+    
+    def draw_self(self, screen):
+        line = min(5, 2 + int((self.health - PLAYER_HEALTH) // 10)) #possible bug here
+        #print(f"player line: {line}")
+        pygame.draw.polygon(screen, "white", self.triangle(), line)
+
     def check_collision(self, circleshape):
 
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -133,6 +153,7 @@ class Player(CircleShape):
 
     def damage(self, dp, rewardfunction):
         self.health -= dp
+        self.collision_flasher.on = True
         if self.health <= 0:
              self.level -= rewardfunction(self, "player") # minus the level, gives corresponding powerups in death
              #print(f"player l after death = - {level}")
@@ -165,9 +186,11 @@ class Player(CircleShape):
         
         self.position += self.velocity
         self.rotation += self.rotate_speed
-        
-        #print(f"{self.position} {self.out_of_bounds()}")
 
+        self.collision_flasher.update(dt)
+        if self.respawn_flasher.on:
+            self.respawn_flasher.update(dt)
+        
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:

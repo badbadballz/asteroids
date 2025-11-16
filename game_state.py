@@ -58,7 +58,7 @@ class Game_state():
         return player
 
     def respawn(self): 
- 
+    
         player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, self.level_counter)
        
         self.update_player_info(player)

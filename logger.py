@@ -75,6 +75,7 @@ def log_state():
 
                 sprites_data.append(sprite_info)
 
+            #gamestate?
             game_state[key] = {"count": len(value), "sprites": sprites_data}
 
         if len(game_state) == 0 and hasattr(value, "position"):
