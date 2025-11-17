@@ -23,9 +23,8 @@ max_radius = 6
 d_speed = 20
 
 
-class Exhaust():
-    pass
-
+    
+   
 #starting_level = 30 
 
 # Player lvl: 0, cooldown: 0.3, life: 0.9, dp: 10, rad: 3 speed: 351
@@ -101,7 +100,9 @@ class Player(CircleShape):
         self.gun = Gun(self)
         self.collision_flasher = Flasher(0.1, 0.1) # can i do some fancy function decorate?
         self.respawn_flasher = Flasher(0.2, 0.2, INVULNERABLE_TIME)
-        print(f"respawn_flasher: {self.respawn_flasher.on}")
+        self.exhaust_flasher = Flasher(0.1, 0.1)
+        #self.moving_forward = False
+        #print(f"respawn_flasher: {self.respawn_flasher.on}")
         #self.respawn_flasher.on = True
 
 # in the player class
@@ -133,9 +134,14 @@ class Player(CircleShape):
             self.draw_self(screen)
     
     def draw_self(self, screen):
+        if self.exhaust_flasher.on:
+            self.exhaust_flasher.on = False
+            self.draw_exhaust(screen)
+        pygame.draw.polygon(screen, "black", self.triangle(), 0)
         line = min(5, 2 + int((self.health - PLAYER_HEALTH) // 10)) #possible bug here
         #print(f"player line: {line}")
         pygame.draw.polygon(screen, "white", self.triangle(), line)
+        
 
     def check_collision(self, circleshape):
 
@@ -187,9 +193,11 @@ class Player(CircleShape):
         self.position += self.velocity
         self.rotation += self.rotate_speed
 
+        # only update if .on???
         self.collision_flasher.update(dt)
         if self.respawn_flasher.on:
             self.respawn_flasher.update(dt)
+        self.exhaust_flasher.update(dt)
         
         keys = pygame.key.get_pressed()
 
@@ -202,6 +210,8 @@ class Player(CircleShape):
         if keys[pygame.K_w]:
             #forward
             self.move(-dt)
+            #self.moving_forward = True
+            self.exhaust_flasher.on = True
         if keys[pygame.K_s]:
             #backward
             self.move(dt)
@@ -247,5 +257,12 @@ class Player(CircleShape):
             self.bomb_count += 1
 
 
-                      
- 
+    def draw_exhaust(self, screen): #testing!
+        if self.exhaust_flasher.can_flash():
+            forward = pygame.Vector2(0, 1).rotate(self.rotation)
+            h = self.position + forward * self.radius
+            pygame.draw.circle(screen, "orange1", h, self.radius / 2, 0)
+        else:
+            forward = pygame.Vector2(0, 1).rotate(self.rotation)
+            h = self.position + forward * self.radius
+            pygame.draw.circle(screen, "orange4", h, self.radius / 1.8, 0)

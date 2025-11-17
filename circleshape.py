@@ -77,7 +77,7 @@ class Flasher():
                 return
             else:
                 self.on_time_counter += dt
-
+        # if on then do this, otherwise its ok not to run?
         self.period_counter += dt
         #print(f"period: {self.period_counter}")
         if self.period_counter > self.period:

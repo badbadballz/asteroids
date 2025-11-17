@@ -133,12 +133,15 @@ def main():
 
 
         gs.update_player_info(player)   
-                     
+                    
         screen.fill(0)
+        
+       
         for sp in gs.drawable:
             sp.flip_around_screen()
             sp.draw(screen)
        
+        
         draw_score(screen, game_font, gs)
 
         if gs.dead:
