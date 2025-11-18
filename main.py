@@ -65,9 +65,11 @@ def main():
     print("W, A, S, D to move, SPACE to shoot, TAB to bomb")
     print("Press R to Restart after Game Over")
     print("Press C to Continue after Game Over")
-    
+    #pygame.mixer.pre_init(44100,32,1, 1024)
+
     pygame.init()
     pygame.font.init() 
+    pygame.mixer.init()
     game_font = pygame.font.SysFont('arial', 30)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()

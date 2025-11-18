@@ -18,6 +18,9 @@ class Asteroid(CircleShape):
         self.spoke_vectors = self.generate_asteroid()
 
         self.armor = armor # 0, 1, 2, 3 * BASE_ARMOR
+
+        self.explode_sound = pygame.mixer.Sound("sounds/456272__soundfxstudio__distance-explosion-sound.wav")
+        
     
     def generate_asteroid(self):
         min_angle = 30 #30
@@ -72,7 +75,13 @@ class Asteroid(CircleShape):
             ex.width = 10
         if type == "explode":
             _ = Explosion(self.position.x, self.position.y, self.radius)
+        self.play_explode_sound()
         self.kill()
+
+    def play_explode_sound(self):
+        if self.explode_sound.get_num_channels() < 1:
+            self.explode_sound.play(maxtime=2000)
+            self.explode_sound.set_volume(0.1)
 
         # more expandable way of logging score/ damage done is need in the future!
     def split(self, type, rewardfunction, scorefunction):

@@ -40,12 +40,14 @@ class Gun(): #odd speed, even life
         self.shot_dp = SHOT_DAMAGE + (d_dp * self.player.level)
         self.shot_radius = SHOT_RADIUS + min(self.player.level // 10, 3)
         self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * math.ceil(l) + 1)#self.player.level)
+        self.shoot_sound = pygame.mixer.Sound("sounds/362458__jalastram__shooting_sounds_008.wav")
     
         #print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
     def fire(self, dt):
         if self.shot_timer <= 0:
             # create a new bullet (shot) object
+            
             forward = pygame.Vector2(0, 1).rotate(self.player.rotation) 
             a = self.player.position - forward * self.player.radius #top of the triangle
             #(self, x, y, radius, life, dp, explode_damage=False, explode_dp=0):
@@ -65,9 +67,15 @@ class Gun(): #odd speed, even life
                 self.shot_timer = self.shot_cooldown
             #print(f"{self.velocity} {self.velocity.rotate(self.rotation)} {forward} {forward * PLAYER_SHOOT_SPEED}")
             bullet.velocity = self.player.velocity + (self.shot_speed * forward * -dt)
+            self.play_fire_sound()
             
             
-            
+    def play_fire_sound(self):
+        if self.shoot_sound.get_num_channels() < 1:
+            self.shoot_sound.play(maxtime=100)
+            self.shoot_sound.set_volume(0.05)
+        #n = self.shoot_sound.get_num_channels()
+        #print(f"shot sound n:{n}")
 
     def upgrade(self):
         
@@ -104,6 +112,8 @@ class Player(CircleShape):
         #self.moving_forward = False
         #print(f"respawn_flasher: {self.respawn_flasher.on}")
         #self.respawn_flasher.on = True
+        self.exhaust_sound = pygame.mixer.Sound("sounds/146770__qubodup__rocket-boost-engine-loop.wav")
+        
 
 # in the player class
     def triangle(self):
@@ -212,6 +222,7 @@ class Player(CircleShape):
             self.move(-dt)
             #self.moving_forward = True
             self.exhaust_flasher.on = True
+            self.play_exhaust_sound()
         if keys[pygame.K_s]:
             #backward
             self.move(dt)
@@ -266,3 +277,9 @@ class Player(CircleShape):
             forward = pygame.Vector2(0, 1).rotate(self.rotation)
             h = self.position + forward * self.radius
             pygame.draw.circle(screen, "orange4", h, self.radius / 1.8, 0)
+
+    def play_exhaust_sound(self):
+        if self.exhaust_sound.get_num_channels() < 1:
+            self.exhaust_sound.play(maxtime=200)
+            self.exhaust_sound.set_volume(0.1)
+       
