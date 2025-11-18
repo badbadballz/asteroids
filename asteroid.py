@@ -3,12 +3,12 @@ import random
 from circleshape import CircleShape
 from constants import *
 from explosion import Explosion
-from powerup import Powerup
-
+#from powerup import Powerup
+from sounds import Sound_type
 
 class Asteroid(CircleShape):
 
-    def __init__(self, x, y, radius, armor=0):
+    def __init__(self, x, y, radius, sound_function, armor=0):
         super().__init__(x, y, radius)
         self.rotate_speed = 0
         self.rotation = 0
@@ -16,10 +16,9 @@ class Asteroid(CircleShape):
         self.splited = False
 
         self.spoke_vectors = self.generate_asteroid()
-
+        self.sound_function = sound_function
         self.armor = armor # 0, 1, 2, 3 * BASE_ARMOR
 
-        self.explode_sound = pygame.mixer.Sound("sounds/456272__soundfxstudio__distance-explosion-sound.wav")
         
     
     def generate_asteroid(self):
@@ -75,13 +74,14 @@ class Asteroid(CircleShape):
             ex.width = 10
         if type == "explode":
             _ = Explosion(self.position.x, self.position.y, self.radius)
-        self.play_explode_sound()
+        #self.play_explode_sound()
+        self.sound_function()
         self.kill()
 
-    def play_explode_sound(self):
-        if self.explode_sound.get_num_channels() < 1:
-            self.explode_sound.play(maxtime=2000)
-            self.explode_sound.set_volume(0.1)
+    #def play_explode_sound(self):
+    #    if self.explode_sound.get_num_channels() < 5:
+    #        self.explode_sound.play(maxtime=2000)
+    #        self.explode_sound.set_volume(0.1)
 
         # more expandable way of logging score/ damage done is need in the future!
     def split(self, type, rewardfunction, scorefunction):
@@ -113,11 +113,11 @@ class Asteroid(CircleShape):
             ast_1_pos = self.position + direction_1 * self.radius #why self.radius?
             ast_2_pos = self.position + direction_2 * self.radius
 
-            ast_1 = Asteroid(ast_1_pos.x, ast_1_pos.y, smaller_radius, self.armor)
+            ast_1 = Asteroid(ast_1_pos.x, ast_1_pos.y, smaller_radius, self.sound_function, self.armor)
             ast_1.velocity = velocity_1 * ASTEROID_SPLIT_ACC
             ast_1.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC 
             
-            ast_2 = Asteroid(ast_2_pos.x, ast_2_pos.y, smaller_radius, self.armor)
+            ast_2 = Asteroid(ast_2_pos.x, ast_2_pos.y, smaller_radius, self.sound_function, self.armor)
             ast_2.velocity = velocity_2 * ASTEROID_SPLIT_ACC
             ast_2.rotate_speed = self.rotate_speed * ASTEROID_SPLIT_ACC
             

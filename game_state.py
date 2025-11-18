@@ -7,6 +7,7 @@ from asteroidfield import AsteroidField
 #from shot import Shot
 from explosion import Explosion
 from powerup import Powerup
+from sounds import Sounds, Sound_type
 
 class Game_state():
 
@@ -20,7 +21,7 @@ class Game_state():
         self.explosions = pygame.sprite.Group()
         self.powerups = pygame.sprite.Group()
         self.font_y = 0
-        
+        self.game_sounds = Sounds()
 
     def __reset_state(self):
         self.reset = False
@@ -54,12 +55,15 @@ class Game_state():
         self.__empty_groups()
         self.__reset_state()
         self.af = AsteroidField(self)
-        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        exhaust_sound_function =  self.game_sounds.play_sound(Sound_type.EXHAUST)
+        shoot_sound_function =  self.game_sounds.play_sound(Sound_type.SHOOT)
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, exhaust_sound_function, shoot_sound_function)
         return player
 
     def respawn(self): 
-    
-        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, self.level_counter)
+        exhaust_sound_function =  self.game_sounds.play_sound(Sound_type.EXHAUST)
+        shoot_sound_function =  self.game_sounds.play_sound(Sound_type.SHOOT)
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, exhaust_sound_function, shoot_sound_function, self.level_counter)
        
         self.update_player_info(player)
         self.dead = False
