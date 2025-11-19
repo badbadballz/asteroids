@@ -4,6 +4,7 @@ from circleshape import CircleShape, Flasher
 from shot import Shot
 from explosion import Explosion
 from constants import *
+from sounds import Sound_type
 
 #lvl 10, bomb suck pu, lvl 20, explosive shot,  lvl max/30, blue mediumblue, dodgerblue
 
@@ -31,7 +32,7 @@ d_speed = 20
 # Player lvl: 30, cooldown: 0.05, life: 1.65, dp: 70, rad: 6 speed: 651 / exploding shot dp may be too low!
 
 class Gun(): #odd speed, even life
-    def __init__(self, player, shoot_sound_function):
+    def __init__(self, player, sound_function):
         self.player = player
         l = self.player.level / 2
         self.shot_timer = 0
@@ -41,7 +42,7 @@ class Gun(): #odd speed, even life
         self.shot_radius = SHOT_RADIUS + min(self.player.level // 10, 3)
         self.shot_speed = PLAYER_SHOOT_SPEED + (d_speed * math.ceil(l) + 1)#self.player.level)
         #self.shoot_sound = pygame.mixer.Sound("sounds/362458__jalastram__shooting_sounds_008.wav")
-        self.shoot_sound_function = shoot_sound_function
+        self.sound_function = sound_function
         #print(f"Player lvl: {self.player.level}, cooldown: {self.shot_cooldown}, life: {self.shot_life}, dp: {self.shot_dp}, rad: {self.shot_radius} speed: {self.shot_speed}")
 
     def fire(self, dt):
@@ -68,7 +69,7 @@ class Gun(): #odd speed, even life
             #print(f"{self.velocity} {self.velocity.rotate(self.rotation)} {forward} {forward * PLAYER_SHOOT_SPEED}")
             bullet.velocity = self.player.velocity + (self.shot_speed * forward * -dt)
             #self.play_fire_sound()
-            self.shoot_sound_function()
+            self.sound_function(Sound_type.SHOOT)
             
             
     #def play_fire_sound(self):
@@ -96,7 +97,7 @@ class Gun(): #odd speed, even life
 
 class Player(CircleShape):
 
-    def __init__(self, x, y, exhaust_sound_function, shoot_sound_function, level=0): # changed to start at level 1
+    def __init__(self, x, y, sound_function, level=0): # changed to start at level 1
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
         self.rotate_speed = 0
@@ -106,11 +107,11 @@ class Player(CircleShape):
         self.bomb_count = PLAYER_BOMB_COUNT
         self.level = level
         #print(f"new player with level:{self.level}")
-        self.gun = Gun(self, shoot_sound_function)
+        self.gun = Gun(self, sound_function)
         self.collision_flasher = Flasher(0.1, 0.1) # can i do some fancy function decorate?
         self.respawn_flasher = Flasher(0.2, 0.2, INVULNERABLE_TIME)
         self.exhaust_flasher = Flasher(0.1, 0.1)
-        self.exhaust_sound_function = exhaust_sound_function
+        self.sound_function = sound_function
         #self.moving_forward = False
         #print(f"respawn_flasher: {self.respawn_flasher.on}")
         #self.respawn_flasher.on = True
@@ -224,8 +225,8 @@ class Player(CircleShape):
             self.move(-dt)
             #self.moving_forward = True
             self.exhaust_flasher.on = True
-            self.exhaust_sound_function()
-
+            #self.exhaust_sound_function()
+            self.sound_function(Sound_type.EXHAUST)
             #self.play_exhaust_sound()
             
         if keys[pygame.K_s]:

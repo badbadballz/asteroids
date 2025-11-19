@@ -7,7 +7,7 @@ from asteroidfield import AsteroidField
 #from shot import Shot
 from explosion import Explosion
 from powerup import Powerup
-from sounds import Sounds, Sound_type
+from sounds import Sounds, Sound_obj_type
 
 class Game_state():
 
@@ -55,15 +55,14 @@ class Game_state():
         self.__empty_groups()
         self.__reset_state()
         self.af = AsteroidField(self)
-        exhaust_sound_function =  self.game_sounds.play_sound(Sound_type.EXHAUST)
-        shoot_sound_function =  self.game_sounds.play_sound(Sound_type.SHOOT)
-        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, exhaust_sound_function, shoot_sound_function)
+        sound_function =  self.game_sounds.return_sound_function(Sound_obj_type.PLAYER)
+       
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_function)
         return player
 
     def respawn(self): 
-        exhaust_sound_function =  self.game_sounds.play_sound(Sound_type.EXHAUST)
-        shoot_sound_function =  self.game_sounds.play_sound(Sound_type.SHOOT)
-        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, exhaust_sound_function, shoot_sound_function, self.level_counter)
+        sound_function =  self.game_sounds.return_sound_function(Sound_obj_type.PLAYER)
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_function, self.level_counter)
        
         self.update_player_info(player)
         self.dead = False

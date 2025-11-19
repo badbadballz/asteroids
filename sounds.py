@@ -2,6 +2,11 @@ import pygame
 from enum import Enum
 
 # make this more general for easier to add new sounds and for new objects
+
+class Sound_obj_type(Enum):
+    AST = 0
+    PLAYER = 1
+
 class Sound_type(Enum):
     EXPLODE = 0
     EXHAUST = 1
@@ -22,6 +27,38 @@ class Sounds():
         raw_array = raw_array[730000:] #1337408
         self.bump_sound = pygame.mixer.Sound(buffer=raw_array)
                 
+
+    def return_sound_function(self, type):
+        match type:
+            case Sound_obj_type.AST:
+                def wrapper(s_type):
+                    match s_type:
+                        case Sound_type.EXPLODE:
+                            if self.explode_sound.get_num_channels() < 5:
+                                self.explode_sound.play(maxtime=3000)
+                                self.explode_sound.set_volume(0.1)
+                        case Sound_type.AST_BUMP:
+                            if self.bump_sound.get_num_channels() < 5:
+                                self.bump_sound.play(maxtime=3000)
+                                self.bump_sound.set_volume(0.2)
+                        case _:
+                            return
+                return wrapper
+            case Sound_obj_type.PLAYER:
+                def wrapper(s_type):
+                    match s_type:
+                        case Sound_type.EXHAUST:
+                            if self.exhaust_sound.get_num_channels() < 1:
+                                self.exhaust_sound.play(maxtime=250)
+                                self.exhaust_sound.set_volume(0.2) 
+                        case Sound_type.SHOOT:
+                            self.shoot_sound.play(maxtime=250)
+                            self.shoot_sound.set_volume(0.05)
+                        case _:
+                            return
+                return wrapper
+            case _:
+                return            
 
     # this can be further made better, to return a tuple? of functions for player / ast
     def play_sound(self, type):
@@ -53,4 +90,4 @@ class Sounds():
                     self.bump_sound.set_volume(0.2)
                
             case _:
-                return
+                return 

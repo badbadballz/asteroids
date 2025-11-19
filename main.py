@@ -69,7 +69,7 @@ def main():
 
     pygame.init()
     pygame.font.init() 
-    pygame.mixer.init()
+    pygame.mixer.init() #sound channel 16 instead?
     game_font = pygame.font.SysFont('arial', 30)
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()

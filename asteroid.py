@@ -72,10 +72,12 @@ class Asteroid(CircleShape):
         if type == "bump": 
             ex = Explosion(self.position.x, self.position.y, self.radius, "grey")
             ex.width = 10
+            self.sound_function(Sound_type.AST_BUMP)
         if type == "explode":
             _ = Explosion(self.position.x, self.position.y, self.radius)
+            self.sound_function(Sound_type.EXPLODE)
         #self.play_explode_sound()
-        self.sound_function()
+        
         self.kill()
 
     #def play_explode_sound(self):

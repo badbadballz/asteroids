@@ -3,7 +3,7 @@ import random
 from asteroid import Asteroid
 from powerup import Powerup
 from constants import *
-from sounds import Sound_type
+from sounds import Sound_obj_type
 
 
 
@@ -49,7 +49,7 @@ class AsteroidField(pygame.sprite.Sprite):
 
     def spawn(self, radius, position, velocity, rotate_speed):
         roll_armor_ast = random.randint(1,10)
-        sound_function = self.gs.game_sounds.play_sound(Sound_type.EXPLODE)
+        sound_function = self.gs.game_sounds.return_sound_function(Sound_obj_type.AST)
         if roll_armor_ast <= CHANCE_ARMOR_AST:
             asteroid = Asteroid(position.x, position.y, radius, sound_function, self.ast_armor)
         else:
