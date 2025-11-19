@@ -145,6 +145,10 @@ def main():
        
         
         draw_score(screen, game_font, gs)
+        k = pygame.key.get_pressed()
+        if k[pygame.K_x]:
+            gs.game_sounds.play_sound(6)
+            print("playing sound")
 
         if gs.dead:
             if gs.game_over or gs.life_counter <= 0:
@@ -172,6 +176,7 @@ def main():
 
         dt = clock.tick(120) / 1000
         
+
         if gs.reset:
             player = gs.new_game()
                     
