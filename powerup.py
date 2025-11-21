@@ -4,6 +4,7 @@ from constants import *
 from circleshape import CircleShape
 from explosion import Explosion, Implosion
 
+
 class Powerup(CircleShape):
 
     pu_types = { "H": "lime",
@@ -20,7 +21,7 @@ class Powerup(CircleShape):
         (self.font_x, self.font_y) = self.pu_font.size(self.type) 
         super().__init__(x , y, 0.8 * self.font_size + self.buffer)
         self.life = random.randint(PU_MIN_TIME, PU_MAX_TIME)
-
+        
     def update(self, dt):
         if self.life <= 0:
              self.explode()
@@ -43,7 +44,7 @@ class Powerup(CircleShape):
 
     def reward(self, player, gs):
         pu_score = 10
-
+        gs.game_sounds.return_sound_function(Obj_type.PLAYER)(Action_type.PICK_UP_PU)()
         match self.type:
             case "H":
                 #print("H")
@@ -69,6 +70,6 @@ class Powerup(CircleShape):
                 #print("L")
                 gs.life_counter += 1
                 gs.score_counter += pu_score
-                 
+                
             case _:
                 return

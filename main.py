@@ -1,4 +1,4 @@
-#import sys
+
 import pygame
 import math
 from constants import *
@@ -10,6 +10,9 @@ from explosion import Explosion, Implosion
 from powerup import Powerup
 from game_state import Game_state
 from logger import log_state
+
+
+
 
 
 def draw_score(screen, game_font, gs):
@@ -97,6 +100,7 @@ def main():
 
         gs.updatable.update(dt)
         
+        # main checking of various collisions in game
         if Collisions_on: 
             for ast in gs.asteroids:
                 if not gs.dead and Player_collisions_on and (not gs.is_invulnerable()) and player.check_collision(ast):
@@ -106,6 +110,8 @@ def main():
                     if gs.dead == True:
                         respawn_time = gs.time_counter + PLAYER_RESPAWN_LAG
                         gs.reset_d_interval() # reset the timer for increasing difficulty
+                    #else:
+                       # player_collided = True
                 for shot in gs.shots:
                     if shot.check_collision(ast):
                         shot.explode()
@@ -138,17 +144,25 @@ def main():
                     
         screen.fill(0)
         
-       
+        # can use this to indicate/control flashing...isinstance(dog, Animal)       
         for sp in gs.drawable:
             sp.flip_around_screen()
+            if isinstance(sp, Player) and gs.is_invulnerable():
+                #print(f"Player here! - {gs.time_counter}")
+                if not gs.return_flash_function()(Action_type.RESPAWN):
+                    continue
             sp.draw(screen)
        
         
         draw_score(screen, game_font, gs)
         k = pygame.key.get_pressed()
+
+        # testing stuff --------
         if k[pygame.K_x]:
-            gs.game_sounds.play_sound(6)
-            print("playing sound")
+            gs.game_sounds.play_sound(1)
+            print("playing sound!")
+        #gs.can_flash(Action_type.PLAYER_COLLISION)
+         # testing stuff --------
 
         if gs.dead:
             if gs.game_over or gs.life_counter <= 0:

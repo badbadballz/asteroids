@@ -3,8 +3,7 @@ import random
 from circleshape import CircleShape
 from constants import *
 from explosion import Explosion
-#from powerup import Powerup
-from sounds import Sound_type
+
 
 class Asteroid(CircleShape):
 
@@ -62,7 +61,7 @@ class Asteroid(CircleShape):
                 resultant_dp = dp
             case _:
                 resultant_dp = max(0, dp - (self.armor * BASE_ARMOR))
-                print(f"resultant_dp: {resultant_dp}, armor: {self.armor}, dp: {dp}")
+                #print(f"resultant_dp: {resultant_dp}, armor: {self.armor}, dp: {dp}")
         self.life -= resultant_dp
         if self.life <= 0:
             return self.split(type, rewardfunction, scorefunction)
@@ -72,10 +71,12 @@ class Asteroid(CircleShape):
         if type == "bump": 
             ex = Explosion(self.position.x, self.position.y, self.radius, "grey")
             ex.width = 10
-            self.sound_function(Sound_type.AST_BUMP)
+            self.sound_function(Action_type.AST_BUMP)()
+            #play_sound()
         if type == "explode":
             _ = Explosion(self.position.x, self.position.y, self.radius)
-            self.sound_function(Sound_type.EXPLODE)
+            self.sound_function(Action_type.EXPLODE)()
+            #play_sound()
         #self.play_explode_sound()
         
         self.kill()

@@ -7,7 +7,11 @@ from asteroidfield import AsteroidField
 #from shot import Shot
 from explosion import Explosion
 from powerup import Powerup
-from sounds import Sounds, Sound_obj_type
+from sounds import Sounds
+from enum import Enum
+
+
+
 
 class Game_state():
 
@@ -55,14 +59,15 @@ class Game_state():
         self.__empty_groups()
         self.__reset_state()
         self.af = AsteroidField(self)
-        sound_function =  self.game_sounds.return_sound_function(Sound_obj_type.PLAYER)
-       
-        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_function)
+        sound_function =  self.game_sounds.return_sound_function(Obj_type.PLAYER)
+        flash_function = self.return_flash_function()
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_function, flash_function)
         return player
 
     def respawn(self): 
-        sound_function =  self.game_sounds.return_sound_function(Sound_obj_type.PLAYER)
-        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_function, self.level_counter)
+        sound_function =  self.game_sounds.return_sound_function(Obj_type.PLAYER)
+        flash_function = self.return_flash_function()
+        player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, sound_function, flash_function, self.level_counter)
        
         self.update_player_info(player)
         self.dead = False
@@ -189,3 +194,36 @@ class Game_state():
 
     def reset_d_interval(self):
         self.d_interval = self.time_counter + D_TIME_INTERVAL
+
+    def return_flash_function(self):
+        def can_flash(type):
+            times = flash_times[type]
+            if times[0] == 0:
+                times[0] = self.time_counter + times[2]
+                times[1] = False
+                #print(f"time_counter: {self.time_counter}, flash_timer: {times[0]}, can_flash: {times[1]}")
+                return times[1]
+            elif self.time_counter > times[0] and times[1] == False:
+                times[1] = not times[1]
+                times[0] = self.time_counter + times[3]
+                #print(f"time_counter: {self.time_counter}, flash_timer: {times[0]}, can_flash: {times[1]}")
+                return times[1]
+            elif self.time_counter > times[0] and times[1] == True:
+                times[1] = not times[1]
+                times[0] = self.time_counter + times[2]
+                #print(f"time_counter: {self.time_counter}, flash_timer: {times[0]}, can_flash: {times[1]}")
+                return times[1]
+            else: 
+                #print(f"time_counter: {self.time_counter}, flash_timer: {times[0]}, can_flash: {times[1]}")
+                return times[1]
+        return can_flash
+    
+#(time, flash_on, interval, period)
+flash_times = {
+                Action_type.PLAYER_COLLISION: [0, False, 0.1, 0.1],
+                Action_type.EXHAUST: [0, False, 0.1, 0.1],
+                Action_type.RESPAWN: [0, False, 0.2, 0.2]
+                }
+     
+
+

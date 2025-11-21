@@ -57,38 +57,3 @@ class CircleShape(pygame.sprite.Sprite):
             return
                 
 
-class Flasher():
-    def __init__(self, interval, period, on_time=None):
-        self.interval = interval # time of the actual flash
-        self.period = period # time between the flash
-        self.interval_counter = 0
-        self.period_counter = 0
-        self.__can_flash = False
-        
-        self.on_time = on_time # can create a Flasher that is only on for specific time and thats it
-        self.on_time_counter = 0 if self.on_time != None else -1
-        self.on = False if self.on_time == None else True #the flasher is activated for outside things
-        print(f"flasher: on_time_counter {self.on_time_counter}")
-
-    def update(self, dt):
-        if self.on_time_counter >= 0 : #this should activate when zero / could be better coded
-            if self.on_time_counter > self.on_time:
-                self.on = False
-                return
-            else:
-                self.on_time_counter += dt
-        # if on then do this, otherwise its ok not to run?
-        self.period_counter += dt
-        #print(f"period: {self.period_counter}")
-        if self.period_counter > self.period:
-            self.interval_counter += dt
-            #print(f"interval: {self.interval_counter}")
-            self.__can_flash =  True
-            if self.interval_counter > self.interval:
-                self.period_counter = 0
-                self.interval_counter = 0
-                self.__can_flash = False
-        
-    
-    def can_flash(self):
-        return self.__can_flash

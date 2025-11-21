@@ -1,3 +1,21 @@
+from enum import Enum
+
+
+class Obj_type(Enum):
+    AST = 0
+    PLAYER = 1
+
+class Action_type(Enum):
+    EXPLODE = 0
+    EXHAUST = 1
+    SHOOT = 2
+    BOMB = 3
+    PICK_UP_PU = 4
+    PLAYER_COLLISION = 5
+    AST_BUMP = 6
+    DEATH = 7 
+    RESPAWN = 8
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
@@ -65,3 +83,5 @@ difficulty_event = {    0 : (ASTEROID_SPAWN_RATE, 0, 0, 0, 0),
 MAX_DIFF_LEVEL = 18
 D_TIME_INTERVAL = 70 #60
 level_interval = 5
+
+
